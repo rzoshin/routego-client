@@ -5,7 +5,6 @@ import PopularRoutes from "@/components/homepage/PopularRoutes";
 import Stats from "@/components/homepage/Stats";
 import Testimonials from "@/components/homepage/Testimonials";
 import WhyChooseUs from "@/components/homepage/WhyChooseUs";
-import Image from "next/image";
 
 export default function Home() {
   return (
