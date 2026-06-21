@@ -1,9 +1,11 @@
-import { Toaster } from "react-hot-toast";
+import Navbar from "@/components/Navbar";
 import "./globals.css";
-
+import Footer from "@/components/Footer";
+import { Toaster } from "react-hot-toast";
 export const metadata = {
-  title: "RouteGo - Book Your Next Journey in Minutes",
-  description: "Discover and book Bus, Train, Launch, and Flight tickets. One journey, endless destinations.",
+  title: "Ticketo | Premium Event Discovery & Ticket Booking Platform",
+  description:
+    "Browse, discover, and purchase tickets for the finest premium events near you. Or create your own organizer account and host events seamlessly.",
 };
 
 export default function RootLayout({ children }) {
