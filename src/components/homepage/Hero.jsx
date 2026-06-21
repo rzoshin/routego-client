@@ -1,4 +1,5 @@
 import { Search, MapPin, Calendar, Bus, Sparkles, Star, ShieldCheck } from 'lucide-react'
+import { Button } from "@heroui/react";
 
 const Hero = () => {
   return (
@@ -100,13 +101,13 @@ const Hero = () => {
 
               {/* Search Buttons */}
               <div className="mt-6 flex flex-col gap-3 sm:flex-row">
-                <button className="flex flex-1 items-center justify-center gap-2 rounded-xl bg-primary py-3.5 font-semibold text-primary-foreground shadow-premium transition hover:bg-primary/90">
+                <Button className="flex flex-1 items-center bg-linear-to-r from-blue-900 to-blue-600 justify-center gap-2 rounded-xl py-3.5 font-semibold text-primary-foreground shadow-premium transition hover:bg-primary/90">
                   <Search className="h-5 w-5" />
                   Search Tickets
-                </button>
-                <button className="flex-1 rounded-xl border border-border bg-background py-3.5 font-semibold text-foreground transition hover:bg-secondary">
+                </Button>
+                <Button className="flex-1 rounded-xl border border-border bg-background py-3.5 font-semibold text-foreground transition hover:bg-secondary">
                   Explore Routes
-                </button>
+                </Button>
               </div>
             </div>
           </div>

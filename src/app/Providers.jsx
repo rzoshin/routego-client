@@ -1,16 +1,12 @@
+// app/providers.tsx
 "use client";
 
-import {ThemeProvider as NextThemesProvider} from "next-themes";
+import { ThemeProvider } from "next-themes";
 
-export function Providers({children}) {
+export function Providers({ children }) {
   return (
-    <NextThemesProvider
-      attribute="class"
-      defaultTheme="system"
-      enableSystem
-      disableTransitionOnChange
-    >
+    <ThemeProvider attribute="class" defaultTheme="light">
       {children}
-    </NextThemesProvider>
+    </ThemeProvider>
   );
 }

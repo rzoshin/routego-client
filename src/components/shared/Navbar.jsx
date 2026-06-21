@@ -5,6 +5,8 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { Menu, X, LogOut, User, Navigation } from 'lucide-react'
 import { Button } from '@heroui/react'
+import Logo from '../ui/Logo'
+import ThemeSwitcher from '../ui/ThemeSwitcher'
 
 const navLinks = [
   { label: 'Home', href: '/' },
@@ -25,10 +27,8 @@ export function Navbar() {
         <div className="flex justify-between items-center h-18 py-4">
           {/* Logo */}
           <Link href="/" className="flex items-center gap-2.5 font-bold text-xl text-foreground">
-            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-primary text-primary-foreground shadow-premium">
-              <Navigation className="h-5 w-5" />
-            </div>
-            <span className="tracking-tight">RouteGo</span>
+            <Logo />
+            <span className="tracking-tight bg-linear-to-r from-blue-900 via-blue-500 to-blue-200 bg-clip-text text-transparent">RouteGo</span>
           </Link>
 
           {/* Desktop Menu */}
@@ -50,9 +50,9 @@ export function Navbar() {
               )
             })}
           </div>
-
           {/* Auth Buttons / User Menu */}
           <div className="hidden md:flex items-center gap-2">
+            <ThemeSwitcher />
             {!isLoggedIn ? (
               <>
                 <Link
@@ -110,6 +110,7 @@ export function Navbar() {
               })}
               {!isLoggedIn ? (
                 <>
+                  <ThemeSwitcher />
                   <Button className="text-foreground hover:text-primary transition text-left">
                     Login
                   </Button>
@@ -118,10 +119,13 @@ export function Navbar() {
                   </Button>
                 </>
               ) : (
-                <Button className="text-foreground hover:text-primary transition flex items-center gap-2">
-                  <LogOut className="w-4 h-4" />
-                  Logout
-                </Button>
+                <>
+                  <ThemeSwitcher />
+                  <Button className="text-foreground hover:text-primary transition flex items-center gap-2">
+                    <LogOut className="w-4 h-4" />
+                    Logout
+                  </Button>
+                </>
               )}
             </div>
           </div>

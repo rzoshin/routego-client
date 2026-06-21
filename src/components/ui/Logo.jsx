@@ -1,17 +1,23 @@
-import Image from 'next/image';
+"use client";
+
+import { useTheme } from "next-themes";
+import Image from "next/image";
 import React from 'react';
 
 const Logo = () => {
+    const { resolvedTheme } = useTheme();
     return (
-        <div>
-            <Image
-                src="/logo.png"
-                alt="Logo"
-                width={100}
-                height={100}
-            />
-        </div>
-    );
-};
+    <Image
+      src={
+        resolvedTheme === "dark"
+          ? "/logo-dark.svg"
+          : "/logo-light.svg"
+      }
+      alt="RouteGo"
+      width={50}
+      height={60}
+    />
+  );
+}
 
 export default Logo;
