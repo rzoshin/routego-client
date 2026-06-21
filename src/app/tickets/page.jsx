@@ -1,11 +1,19 @@
-import React from 'react';
+import InspirationBanner from "@/components/tickets/InspirationBanner"
+import SearchHero from "@/components/tickets/SearchHero"
+import TicketsBrowser from "@/components/tickets/TicketsBrowser"
 
-const AllTicketsPage = () => {
-    return (
-        <div>
-            
-        </div>
-    );
-};
 
-export default AllTicketsPage;
+export const metadata = {
+  title: 'All Tickets - RouteGo',
+  description: 'Search, filter, and compare Bus, Train, Launch, and Flight tickets on RouteGo.',
+}
+
+export default function TicketsPage() {
+  return (
+    <main>
+      <SearchHero />
+      <TicketsBrowser />
+      <InspirationBanner />
+    </main>
+  )
+}

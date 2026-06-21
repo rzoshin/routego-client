@@ -27,7 +27,11 @@ export default function RootLayout({children}) {
     suppressHydrationWarning
     className={`${plusJakartaSans.variable} bg-background`}>
       <body className="font-sans antialiased">
-        <Providers> <Navbar /> {children} <Footer /> </Providers>
+        <Providers> 
+          <Navbar /> 
+          {children} 
+          <Footer /> 
+        </Providers>
         <Toaster />
       </body>
     </html>

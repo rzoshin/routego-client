@@ -20,7 +20,7 @@ export function Navbar() {
   const toggleMenu = () => setIsOpen(!isOpen)
 
   return (
-    <nav className="sticky top-0 z-50 border-b border-border/60 bg-background/70 backdrop-blur-xl">
+    <nav className="sticky top-0 z-50 border border-border/60 bg-background/70 backdrop-blur-xl rounded-2xl shadow-lg max-w-7xl mx-auto my-4">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-18 py-4">
           {/* Logo */}
@@ -55,12 +55,12 @@ export function Navbar() {
           <div className="hidden md:flex items-center gap-2">
             {!isLoggedIn ? (
               <>
-                <Button
-                  onClick={() => setIsLoggedIn(true)}
+                <Link
+                  href="/login"
                   className="rounded-lg px-4 py-2 text-sm font-medium text-foreground transition hover:bg-secondary"
                 >
                   Login
-                </Button>
+                </Link>
                 <button className="rounded-lg bg-primary px-5 py-2 text-sm font-semibold text-primary-foreground shadow-premium transition hover:bg-primary/90">
                   Get Started
                 </button>
