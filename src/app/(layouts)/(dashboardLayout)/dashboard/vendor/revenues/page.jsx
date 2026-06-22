@@ -1,14 +1,15 @@
 import React from 'react';
 import DashboardHeading from '@/components/dashboard/DashboardHeading';
 
-const AdminDashboard = () => {
+const VendorRevenues = () => {
     return (
         <div>
             <DashboardHeading 
-            title="My Profile"
+            title="Revenue Overview"
             description="" />
+
         </div>
     );
 };
 
-export default AdminDashboard;
+export default VendorRevenues;

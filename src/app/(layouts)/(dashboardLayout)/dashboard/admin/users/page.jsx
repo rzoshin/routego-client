@@ -1,14 +1,14 @@
 import React from 'react';
 import DashboardHeading from '@/components/dashboard/DashboardHeading';
 
-const AdminDashboard = () => {
+const ManageUsers = () => {
     return (
         <div>
             <DashboardHeading 
-            title="My Profile"
+            title="Manage Users"
             description="" />
         </div>
     );
 };
 
-export default AdminDashboard;
+export default ManageUsers;

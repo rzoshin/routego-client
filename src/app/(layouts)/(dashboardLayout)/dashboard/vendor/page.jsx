@@ -1,11 +1,14 @@
+import DashboardHeading from '@/components/dashboard/DashboardHeading';
 import React from 'react';
 
-const VendorDashboard = () => {
+const VendorProfile = () => {
     return (
         <div>
-            Vendor Dashboard
+            <DashboardHeading 
+            title="My Profile"
+            description="" />
         </div>
     );
 };
 
-export default VendorDashboard;
+export default VendorProfile;

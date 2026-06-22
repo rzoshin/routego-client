@@ -12,23 +12,24 @@ const DashboardSideBar = () => {
   }
 
   const vendorMenu = [
-    { key: "overview", label: "Overview", icon: FaUsers, href: "/dashboard/vendor" },
-    { key: "organization", label: "Organization", icon: FaBuilding, href: "/dashboard/vendor/organization" },
-    { key: "add-event", label: "Add Ticket", icon: FaPlus, href: "/dashboard/vendor/add-ticket" },
-    { key: "manage-events", label: "Manage Tickets", icon: FaCalendarAlt, href: "/dashboard/vendor/manage-tickets" },
-    { key: "attendees", label: "Users", icon: FaUsers, href: "/dashboard/vendor/users" },
+    { key: "profile", label: "My Profile", icon: FaUsers, href: "/dashboard/vendor" },
+    { key: "add-ticket", label: "Add Ticket", icon: FaPlus, href: "/dashboard/vendor/add-ticket" },
+    { key: "my-tickets", label: "My Added Tickets", icon: FaCalendarAlt, href: "/dashboard/vendor/added-tickets" },
+    { key: "bookings", label: "Requested Bookings", icon: FaUsers, href: "/dashboard/vendor/bookings" },
+    { key: "revenues", label: "Revenue Overview", icon: FaHistory, href: "/dashboard/vendor/revenues" },
   ]
 
   const userMenu = [
-    { key: "overview", label: "Overview", icon: FaUserCircle, href: "/dashboard/user" },
-    { key: "tickets", label: "My Tickets", icon: FaTicketAlt, href: "/dashboard/user/tickets" },
-    { key: "payments", label: "Payments", icon: FaHistory, href: "/dashboard/user/payments" },
+    { key: "profile", label: "My Profile", icon: FaUserCircle, href: "/dashboard/user" },
+    { key: "tickets", label: "My Booked Tickets", icon: FaTicketAlt, href: "/dashboard/user/tickets" },
+    { key: "transactions", label: "Transactions", icon: FaHistory, href: "/dashboard/user/transactions" },
   ]
 
   const adminMenu = [
-    { key: "users", label: "Users", icon: FaUserShield, href: "/dashboard/users" },
-    { key: "events", label: "Approve Events", icon: FaCalendarAlt, href: "/dashboard/tickets" },
-    { key: "transactions", label: "Transaction Logs", icon: FaHistory, href: "/dashboard/transactions" },
+    { key: "profile", label: "My Profile", icon: FaUserShield, href: "/dashboard/admin" },
+    { key: "manage-tickets", label: "Manage Tickets", icon: FaCalendarAlt, href: "/dashboard/admin/tickets" },
+    { key: "manage-users", label: "Manage Users", icon: FaUsers, href: "/dashboard/admin/admin/users" },
+    { key: "advertise-tickets", label: "Advertise Tickets", icon: FaHistory, href: "/dashboard/admin/advertise-tickets" },
   ]
 
   const role = session?.user?.role;
@@ -70,7 +71,7 @@ const DashboardSideBar = () => {
         </div>
 
         {/* Navigation Menu */}
-        <nav className="flex-grow overflow-y-auto px-3 py-4 space-y-1">
+        <nav className="grow overflow-y-auto px-3 py-4 space-y-1">
           <p className="text-[10px] text-slate-600 font-bold uppercase tracking-widest px-3 pb-2">Navigation</p>
           {
             menuItems?.map(({ key, label, icon: Icon, href }) => {

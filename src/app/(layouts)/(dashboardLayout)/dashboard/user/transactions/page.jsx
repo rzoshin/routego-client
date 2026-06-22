@@ -1,14 +1,14 @@
 import React from 'react';
 import DashboardHeading from '@/components/dashboard/DashboardHeading';
 
-const AdminDashboard = () => {
+const UserTransactionsPage = () => {
     return (
         <div>
             <DashboardHeading 
-            title="My Profile"
+            title="My Transactions"
             description="" />
         </div>
     );
 };
 
-export default AdminDashboard;
+export default UserTransactionsPage;
