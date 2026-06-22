@@ -2,8 +2,6 @@ import { Toaster } from "react-hot-toast";
 import "./globals.css";
 import { Providers } from "./Providers";
 import { Plus_Jakarta_Sans } from 'next/font/google'
-import { Navbar } from "@/components/shared/Navbar";
-import Footer from "@/components/shared/Footer";
 
 const plusJakartaSans = Plus_Jakarta_Sans({ variable: '--font-sans', subsets: ['latin'] })
 
@@ -28,9 +26,7 @@ export default function RootLayout({children}) {
     className={`${plusJakartaSans.variable} bg-background`}>
       <body className="font-sans antialiased">
         <Providers> 
-          <Navbar /> 
           {children} 
-          <Footer /> 
         </Providers>
         <Toaster />
       </body>

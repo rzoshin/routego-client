@@ -12,11 +12,6 @@ import { authClient, useSession } from "@/lib/auth-client";
 import { FaSignOutAlt, FaThLarge, FaUser } from "react-icons/fa";
 import Image from "next/image";
 
-const navLinks = [
-  { label: "Home", href: "/" },
-  { label: "All Tickets", href: "/tickets" },
-  { label: "Dashboard", href: "/dashboard" },
-];
 
 export function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
@@ -41,6 +36,11 @@ export function Navbar() {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
+  const navLinks = [
+  { label: "Home", href: "/" },
+  { label: "All Tickets", href: "/tickets" },
+  { label: "Dashboard", href: `/dashboard/${session?.user?.role}` || '/login' },
+];
   const handleLogout = async () => {
     await authClient.signOut({
       fetchOptions: {

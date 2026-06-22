@@ -12,7 +12,7 @@ export default function TicketsPage() {
   return (
     <main>
       <SearchHero />
-      <TicketsBrowser />
+      {/* <TicketsBrowser /> */}
       <InspirationBanner />
     </main>
   )
