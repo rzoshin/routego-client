@@ -5,6 +5,7 @@ import Stats from "@/components/homepage/Stats";
 import PopularRoutes from "@/components/homepage/PopularRoutes";
 import Testimonials from "@/components/homepage/Testimonials";
 import CTA from "@/components/homepage/Cta";
+import { Toaster } from "react-hot-toast";
 
 export default async function HomePage() {
     return (
@@ -16,6 +17,7 @@ export default async function HomePage() {
             <Stats />
             <Testimonials />
             <CTA />
+            <Toaster />
         </main>
     )
 }
