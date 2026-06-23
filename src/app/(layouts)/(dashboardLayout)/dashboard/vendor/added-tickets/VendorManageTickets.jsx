@@ -1,6 +1,7 @@
 "use client"
-import DeleteEventModal from "@/components/DeleteEventModal";
-import EditEventModal from "@/components/EditEventModal";
+
+import DeleteTicketModal from "@/components/dashboard/vendor/DeleteTicketModal";
+import EditTicketModal from "@/components/dashboard/vendor/EditTicketModal";
 import { Button, Card, Chip, Table, TableBody, TableCell, TableColumn, TableContent, TableHeader, TableRow } from "@heroui/react";
 import { useState } from "react";
 import { FaEdit, FaTrash } from "react-icons/fa";
@@ -8,7 +9,7 @@ import { FaEdit, FaTrash } from "react-icons/fa";
 const VendorManageTickets = ({ tickets }) => {
     const [deletedId, setDeletedId] = useState(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const [editingEvent, setEditingEvent] = useState(null);
+    const [editingTicket, setEditingTicket] = useState(null);
     const [isDeleteOpen, setIsDeleteOpen] = useState(null);
 
     return (
@@ -28,39 +29,39 @@ const VendorManageTickets = ({ tickets }) => {
                                     <TableColumn className="py-4 px-6 text-slate-400 font-extrabold uppercase text-[11px] tracking-wider border-b border-white/5 bg-slate-950/20">STATUS</TableColumn>
                                     <TableColumn className="py-4 px-6 text-slate-400 font-extrabold uppercase text-[11px] tracking-wider border-b border-white/5 bg-slate-950/20">ACTIONS</TableColumn>
                                 </TableHeader>
-                                <TableBody emptyContent={<p className="text-slate-500 py-10 text-center font-medium">You haven not added any events yet.</p>}>
+                                <TableBody emptyContent={<p className="text-slate-500 py-10 text-center font-medium">You haven not added any tickets yet.</p>}>
                                     {tickets?.map((ticket) => (
                                         <TableRow key={ticket._id} className="border-b border-white/5 hover:bg-white/5 transition-colors duration-150 last:border-b-0">
                                             <TableCell className="py-4 px-6 align-middle font-bold text-white"><span className="line-clamp-1 truncate max-w-[150px]">{ticket.title}</span></TableCell>
                                             <TableCell className="py-4 px-6 align-middle text-slate-300 font-medium">{ticket.transportType}</TableCell>
-                                            <TableCell className="py-4 px-6 align-middle text-slate-300 font-medium">{ticket.date}</TableCell>
+                                            <TableCell className="py-4 px-6 align-middle text-slate-300 font-medium">{ticket.departureDate}</TableCell>
                                             <TableCell className="py-4 px-6 align-middle font-semibold text-green-400">${ticket.price?.toFixed(2)}</TableCell>
                                             <TableCell className="py-4 px-6 align-middle text-slate-300 font-medium">{ticket.quantity} seats</TableCell>
                                             <TableCell className="py-4 px-6 align-middle">
                                                 <Chip
                                                     size="sm"
-                                                    className={`font-bold uppercase text-[10px] tracking-wider border px-2.5 py-1 ${ev.status === "approved"
+                                                    className={`font-bold uppercase text-[10px] tracking-wider border px-2.5 py-1 ${ticket.status === "approved"
                                                         ? "bg-green-500/10 text-green-400 border-green-500/20"
-                                                        : ev.status === "rejected"
+                                                        : ticket.status === "rejected"
                                                             ? "bg-red-500/10 text-red-400 border-red-500/20"
                                                             : "bg-yellow-500/10 text-yellow-400 border-yellow-500/20"
                                                         }`}
                                                 >
-                                                    {ev.status || "pending"}
+                                                    {ticket.status || "pending"}
                                                 </Chip>
                                             </TableCell>
                                             <TableCell className="py-4 px-6 align-middle">
                                                 <div className="flex gap-2">
                                                     <div className="group relative flex items-center justify-center w-fit">
-                                                        <Button isIconOnly size="sm" radius="full" className="h-8 w-8 min-w-0 p-0 border border-indigo-500/20 bg-indigo-500/10 text-indigo-400 hover:bg-indigo-500/20 hover:scale-[1.03] transition-all duration-200" onPress={() => { setEditingEvent({ ...ev }); setIsModalOpen(true); }}><FaEdit size={12} /></Button>
-                                                        <span className="pointer-events-none absolute -top-8 left-1/2 -translate-x-1/2 scale-0 transition-all duration-150 rounded-lg bg-slate-950 border border-white/10 px-2 py-1 text-[10px] text-white group-hover:scale-100 font-semibold z-30 whitespace-nowrap shadow-xl">Edit Event</span>
+                                                        <Button isIconOnly size="sm" radius="full" className="h-8 w-8 min-w-0 p-0 border border-indigo-500/20 bg-indigo-500/10 text-indigo-400 hover:bg-indigo-500/20 hover:scale-[1.03] transition-all duration-200" onPress={() => { setEditingTicket({ ...ticket }); setIsModalOpen(true); }}><FaEdit size={12} /></Button>
+                                                        <span className="pointer-events-none absolute -top-8 left-1/2 -translate-x-1/2 scale-0 transition-all duration-150 rounded-lg bg-slate-950 border border-white/10 px-2 py-1 text-[10px] text-white group-hover:scale-100 font-semibold z-30 whitespace-nowrap shadow-xl">Edit Ticket</span>
                                                     </div>
                                                     <div className="group relative flex items-center justify-center w-fit">
                                                         <Button isIconOnly size="sm" radius="full" className="h-8 w-8 min-w-0 p-0 border border-red-500/20 bg-red-500/10 text-red-400 hover:bg-red-500/20 hover:scale-[1.03] transition-all duration-200" onPress={() => {
-                                                            setDeletedId(ev._id)
+                                                            setDeletedId(ticket._id)
                                                             setIsDeleteOpen(true)
                                                         }}><FaTrash size={12} /></Button>
-                                                        <span className="pointer-events-none absolute -top-8 left-1/2 -translate-x-1/2 scale-0 transition-all duration-150 rounded-lg bg-slate-950 border border-white/10 px-2 py-1 text-[10px] text-white group-hover:scale-100 font-semibold z-30 whitespace-nowrap shadow-xl">Delete Event</span>
+                                                        <span className="pointer-events-none absolute -top-8 left-1/2 -translate-x-1/2 scale-0 transition-all duration-150 rounded-lg bg-slate-950 border border-white/10 px-2 py-1 text-[10px] text-white group-hover:scale-100 font-semibold z-30 whitespace-nowrap shadow-xl">Delete Ticket</span>
                                                     </div>
                                                 </div>
                                             </TableCell>
@@ -74,9 +75,9 @@ const VendorManageTickets = ({ tickets }) => {
                 </Card>
             </div>
 
-            {/* EVENT EDIT MODAL */}
-            <EditEventModal isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} editingEvent={editingEvent} />
-            <DeleteEventModal isDeleteOpen={isDeleteOpen} setIsDeleteOpen={setIsDeleteOpen} id={deletedId} />
+            {/* TICKET EDIT MODAL */}
+            <EditTicketModal isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} editingTicket={editingTicket} />
+            <DeleteTicketModal isDeleteOpen={isDeleteOpen} setIsDeleteOpen={setIsDeleteOpen} id={deletedId} />
         </div>
     );
 };

@@ -1,4 +1,4 @@
-import { deleteEvent } from "@/lib/api/events/actions";
+import { deleteTicket } from "@/lib/api/tickets/action";
 import { Button, Modal } from "@heroui/react";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
@@ -6,10 +6,10 @@ import toast from "react-hot-toast";
 const DeleteTicketModal = ({ isDeleteOpen, setIsDeleteOpen, id }) => {
     const router = useRouter();
     const handleDeleteEvent = async () => {
-        const res = await deleteEvent(id);
+        const res = await deleteTicket(id);
         if (res?.deletedCount > 0) {
             router.refresh();
-            toast.success("Event deleted successfully");
+            toast.success("Ticket deleted successfully");
             setIsDeleteOpen(false)
         }
     }

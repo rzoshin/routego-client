@@ -76,7 +76,7 @@ const AddTickets = () => {
         price: Number(data.price),
         quantity: Number(data.quantity),
 
-        departureDate: data.departureDate,
+        departureDate: data.date,
 
         perks: data.perks || [],
 

@@ -1,27 +1,26 @@
-import DashboardHeading from "@/components/DashboardHeading";
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
-import { myEvents } from "@/lib/api/events/data";
+import { myTickets } from "@/lib/api/tickets/data";
 import { Suspense } from "react";
 import { Spinner } from "@heroui/react";
 import VendorManageTickets from "./VendorManageTickets";
+import DashboardHeading from "@/components/dashboard/DashboardHeading";
 
 const VendorTickets = async () => {
     const session = await auth.api.getSession({
         headers: await headers()
     })
-    const events = await myEvents(session?.user?.email)
+    const tickets = await myTickets(session?.user?.email)
 
     return (
         <div>
             <DashboardHeading
-                title="Manage Event"
-                description="Manage event"
+                title="Manage Ticket"
+                description="Manage ticket"
             />
             <Suspense fallback={<Spinner />}>
-                <VendorManageTickets events={events} />
+                <VendorManageTickets tickets={tickets} />
             </Suspense>
-
         </div>
     );
 };

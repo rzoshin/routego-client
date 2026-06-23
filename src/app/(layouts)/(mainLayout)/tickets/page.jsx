@@ -8,11 +8,11 @@ export const metadata = {
   description: 'Search, filter, and compare Bus, Train, Launch, and Flight tickets on RouteGo.',
 }
 
-export default function TicketsPage() {
+export default function TicketsPage({ searchParams }) {
   return (
     <main>
       <SearchHero />
-      {/* <TicketsBrowser /> */}
+      <TicketsBrowser searchParams={searchParams} />
       <InspirationBanner />
     </main>
   )

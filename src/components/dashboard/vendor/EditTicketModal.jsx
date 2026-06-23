@@ -51,7 +51,7 @@ const PERKS = [
   "Water Bottle",
 ];
 
-const EditTicketModal = () => {
+const EditTicketModal = ({ isModalOpen, setIsModalOpen, editingTicket }) => {
   const { data: session } = useSession();
   const {
     register,
@@ -73,7 +73,7 @@ const EditTicketModal = () => {
             const imageUrl = await uploadImage(imageFile)
             updateData.banner = imageUrl;
         }
-      const result = await updateTicket(updateData, editingEvent?._id);
+      const result = await updateTicket(updateData, editingTicket?._id);
 
       if (result.insertedId) {
         toast.success("Ticket submitted for verification");
