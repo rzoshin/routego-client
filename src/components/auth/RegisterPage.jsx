@@ -26,6 +26,7 @@ import { useForm } from "react-hook-form";
 import { authClient } from "@/lib/auth-client";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
+import { createUser } from "@/lib/api/users/action";
 
 export default function RegisterPage() {
   const router = useRouter();
@@ -34,7 +35,7 @@ export default function RegisterPage() {
     handleSubmit,
     formState: { errors },
   } = useForm();
-  console.log(errors);
+
   const onSubmit = async (formData) => {
     try {
       const { error: signUpError } =
@@ -51,9 +52,16 @@ export default function RegisterPage() {
       }
 
       // 2. Only run these if the signup was completely successful
+      const userData = {
+        email: formData.email,
+        password: formData.password,
+        name: formData.name,
+        role: formData.role,
+      }
+      const resData = await createUser(userData);
+
       toast.success("Account created successfully!");
       router.push("/login");
-      router.refresh();
     } catch (error) {
       toast.error(`Registration failed: ${error.message}`);
     }
@@ -167,7 +175,6 @@ export default function RegisterPage() {
                   placeholder="Select Role"
                   className="w-full rounded-xl border border-border bg-background py-5 pl-18 pr-3 text-foreground transition focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30"
                 >
-                  <option value="">Select Role</option>
                   <option value="user">User (Browse & Book Tickets)</option>
                   <option value="vendor">Vendor (Create Tickets)</option>
                 </select>
