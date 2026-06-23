@@ -1,34 +1,80 @@
-'use client'
+"use client";
 
 // app/tickets/[id]/BookingPanel.jsx
 // Sticky booking sidebar — client component (quantity state, booking action)
 
-import { useState } from 'react'
-import { useRouter } from 'next/navigation'
-import { Minus, Plus, Users, CreditCard, ChevronRight } from 'lucide-react'
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { Minus, Plus, Users, CreditCard, ChevronRight } from "lucide-react";
+import { Input, Modal, Button } from "@heroui/react";
+import { addBooking } from "@/lib/api/bookings/action";
+import { useSession } from "@/lib/auth-client";
+import toast from "react-hot-toast";
 
 export default function BookingPanel({ ticket }) {
-  const router   = useRouter()
-  const [qty, setQty] = useState(1)
-  const [loading, setLoading] = useState(false)
+  const router = useRouter();
+  const [qty, setQty] = useState(1);
+  const [loading, setLoading] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
+  const { data: session } = useSession();
+  const price = ticket.price ?? 0;
+  const availableSeats = ticket.quantity - (ticket.bookedSeats || 0);
+  const maxQty = availableSeats;
+  const total = price * qty;
+  const currency = "BDT"; // change to '$' if you prefer
 
-  const price    = ticket.price ?? 0
-  const maxQty   = ticket.quantity ?? 10
-  const total    = price * qty
-  const currency = 'BDT'          // change to '$' if you prefer
+  const departureDateTime = new Date(
+    `${ticket.departureDate} ${ticket.departureTime}`,
+  );
 
-  const handleBook = async () => {
-    setLoading(true)
-    // Replace with your Stripe / booking API call:
-    // await createBooking({ ticketId: ticket._id, quantity: qty })
-    router.push(`/checkout?ticketId=${ticket._id}&qty=${qty}`)
-  }
+
+
+  const isSoldOut = availableSeats <= 0;
+  const isExpired = departureDateTime < new Date();
+
+  const handleBookTicket = async () => {
+    try {
+      setLoading(true);
+
+      if (qty > availableSeats) {
+        toast.error("Booking quantity cannot exceed available seats");
+        return;
+      }
+      const bookingData = {
+        ticketId: ticket._id,
+        ticketTitle: ticket.title,
+        quantity: qty,
+        totalPrice: qty * ticket.price,
+        userEmail: session.user.email,
+        userName: session.user.name,
+        vendorEmail: ticket.vendorEmail,
+        bookingStatus: "pending",
+        paymentStatus: "pending",
+        createdAt: new Date(),
+      };
+      const result = await addBooking(bookingData);
+
+      if (result.insertedId) {
+        toast.success("Booking successful");
+        setIsOpen(false);
+
+        router.push("/dashboard/user/tickets");
+        router.refresh();
+      }
+    } catch (error) {
+      toast.error("Booking failed", error.message);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
       {/* Price header */}
       <div className="bg-blue-600 px-6 py-5 text-white">
-        <p className="text-xs font-semibold uppercase tracking-widest text-blue-200">Price per seat</p>
+        <p className="text-xs font-semibold uppercase tracking-widest text-blue-200">
+          Price per seat
+        </p>
         <p className="mt-1 text-4xl font-extrabold tracking-tight">
           {currency} {price.toLocaleString()}
         </p>
@@ -38,7 +84,7 @@ export default function BookingPanel({ ticket }) {
       <div className="flex items-center gap-2 border-b border-slate-100 px-6 py-3">
         <Users className="h-4 w-4 text-blue-500" />
         <span className="text-sm font-medium text-slate-700">
-          <span className="font-bold text-blue-600">{maxQty}</span> seats available
+          <span className="font-bold text-blue-600">{availableSeats}</span>
         </span>
       </div>
 
@@ -49,17 +95,19 @@ export default function BookingPanel({ ticket }) {
         </p>
         <div className="flex items-center gap-4">
           <button
-            onClick={() => setQty(q => Math.max(1, q - 1))}
+            onClick={() => setQty((q) => Math.max(1, q - 1))}
             disabled={qty <= 1}
             className="flex h-9 w-9 items-center justify-center rounded-lg border border-slate-200 bg-slate-50 text-slate-600 transition hover:border-blue-300 hover:bg-blue-50 hover:text-blue-600 disabled:opacity-40"
           >
             <Minus className="h-4 w-4" />
           </button>
 
-          <span className="w-8 text-center text-lg font-bold text-slate-900">{qty}</span>
+          <span className="w-8 text-center text-lg font-bold text-slate-900">
+            {qty}
+          </span>
 
           <button
-            onClick={() => setQty(q => Math.min(maxQty, q + 1))}
+            onClick={() => setQty((q) => Math.min(maxQty, q + 1))}
             disabled={qty >= maxQty}
             className="flex h-9 w-9 items-center justify-center rounded-lg border border-slate-200 bg-slate-50 text-slate-600 transition hover:border-blue-300 hover:bg-blue-50 hover:text-blue-600 disabled:opacity-40"
           >
@@ -70,8 +118,13 @@ export default function BookingPanel({ ticket }) {
         {/* Price breakdown */}
         <div className="mt-5 space-y-2 rounded-xl bg-slate-50 p-4 text-sm">
           <div className="flex justify-between text-slate-600">
-            <span>{currency} {price.toLocaleString()} × {qty} seat{qty > 1 ? 's' : ''}</span>
-            <span>{currency} {(price * qty).toLocaleString()}</span>
+            <span>
+              {currency} {price.toLocaleString()} × {qty} seat
+              {qty > 1 ? "s" : ""}
+            </span>
+            <span>
+              {currency} {(price * qty).toLocaleString()}
+            </span>
           </div>
           <div className="flex justify-between text-slate-600">
             <span>Booking fee</span>
@@ -79,14 +132,16 @@ export default function BookingPanel({ ticket }) {
           </div>
           <div className="mt-2 flex justify-between border-t border-slate-200 pt-2 font-bold text-slate-900">
             <span>Total</span>
-            <span className="text-blue-600">{currency} {total.toLocaleString()}</span>
+            <span className="text-blue-600">
+              {currency} {total.toLocaleString()}
+            </span>
           </div>
         </div>
 
         {/* Book button */}
         <button
-          onClick={handleBook}
-          disabled={loading}
+          onClick={() => setIsOpen(true)}
+          disabled={loading || isExpired || isSoldOut}
           className="mt-4 inline-flex w-full items-center justify-center gap-2 rounded-xl bg-blue-600 px-6 py-3.5 text-base font-semibold text-white shadow-sm transition hover:bg-blue-700 active:scale-[0.99] disabled:opacity-70"
         >
           {loading ? (
@@ -94,16 +149,64 @@ export default function BookingPanel({ ticket }) {
           ) : (
             <>
               <CreditCard className="h-5 w-5" />
-              Book now
+              {isExpired
+                ? "Ticket Expired"
+                : isSoldOut
+                  ? "Sold Out"
+                  : "Book Now"}
               <ChevronRight className="h-4 w-4 opacity-70" />
             </>
           )}
         </button>
+        <Modal isOpen={isOpen} onOpenChange={setIsOpen}>
+          <Modal.Backdrop>
+            <Modal.Container>
+              <Modal.Dialog>
+                <h1>Book Ticket</h1>
+                <Input
+                  type="number"
+                  min={1}
+                  max={availableSeats}
+                  value={qty}
+                  onChange={(e) => {
+                    const value = Number(e.target.value);
 
+                    if (value < 1) {
+                      setQty(1);
+                    } else if (value > availableSeats) {
+                      setQty(availableSeats);
+                    } else {
+                      setQty(value);
+                    }
+                  }}
+                />
+
+                <p>
+                  Available Seats:
+                  {availableSeats}
+                </p>
+
+                <p>Total: BDT {(qty * price).toLocaleString()}</p>
+
+                <Button
+                  color="danger"
+                  variant="light"
+                  onClick={() => setIsOpen(false)}
+                >
+                  Cancel
+                </Button>
+
+                <Button color="primary" onClick={handleBookTicket}>
+                  Confirm Booking
+                </Button>
+              </Modal.Dialog>
+            </Modal.Container>
+          </Modal.Backdrop>
+        </Modal>
         <p className="mt-3 text-center text-xs text-slate-400">
           Secure payment via Stripe · Instant e-ticket
         </p>
       </div>
     </div>
-  )
+  );
 }

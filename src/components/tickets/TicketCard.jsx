@@ -110,7 +110,7 @@ const TicketCard = ({ key, ticket, buttonText }) => {
           }`}
         >
           <Users className="h-3.5 w-3.5" />
-          {lowSeats ? `Only ${ticket.quantity} seats left` : `${ticket.quantity} seats available`}
+          {lowSeats ? `Only ${ticket.quantity - (ticket.bookedSeats || 0)} seats left` : `${ticket.quantity - (ticket.bookedSeats || 0)} seats available`}
         </div>
 
         {/* Footer */}
