@@ -11,3 +11,4 @@ export const addBooking = async (bookingData) => {
 
   return resData;
 };
+

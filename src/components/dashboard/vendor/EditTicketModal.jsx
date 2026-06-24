@@ -1,21 +1,31 @@
-import React from "react";
+"use client";
+
+import React, { useEffect } from "react";
 import {
   Button,
   Input,
   Form,
-  Label,
   Modal,
 } from "@heroui/react";
+
+import { useForm } from "react-hook-form";
+import { useRouter } from "next/navigation";
+import toast from "react-hot-toast";
+
 import { FaImage } from "react-icons/fa";
 
-import DashboardHeading from "@/components/dashboard/DashboardHeading";
-import toast from "react-hot-toast";
 import { uploadImage } from "@/utils/uploadImage";
-import { useForm } from "react-hook-form";
-import { addTicket, updateTicket } from "@/lib/api/tickets/action";
+import { updateTicket } from "@/lib/api/tickets/action";
 import { useSession } from "@/lib/auth-client";
 
-const FROM_LOCATIONS = [
+const TRANSPORT_TYPES = [
+  "Bus",
+  "Train",
+  "Flight",
+  "Launch",
+];
+
+const LOCATIONS = [
   "Dhaka",
   "Chittagong",
   "Sylhet",
@@ -25,19 +35,6 @@ const FROM_LOCATIONS = [
   "Rangpur",
   "Mymensingh",
 ];
-
-const TO_LOCATIONS = [
-  "Dhaka",
-  "Chittagong",
-  "Sylhet",
-  "Khulna",
-  "Rajshahi",
-  "Barisal",
-  "Rangpur",
-  "Mymensingh",
-];
-
-const TRANSPORT_TYPES = ["Bus", "Train", "Flight", "Launch"];
 
 const PERKS = [
   "AC",
@@ -51,305 +48,247 @@ const PERKS = [
   "Water Bottle",
 ];
 
-const EditTicketModal = ({ isModalOpen, setIsModalOpen, editingTicket }) => {
+const EditTicketModal = ({
+  isModalOpen,
+  setIsModalOpen,
+  editingTicket,
+}) => {
+  const router = useRouter();
+
   const { data: session } = useSession();
+
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    reset,
+    formState: { errors, isSubmitting },
   } = useForm();
+
+  useEffect(() => {
+    if (editingTicket) {
+      reset({
+        ...editingTicket,
+      });
+    }
+  }, [editingTicket, reset]);
 
   const onSubmit = async (data) => {
     try {
-      const imageFile = data.image[0];
-      const imageUrl = await uploadImage(imageFile);
-
       const updateData = {
-            ...data
-        }
-        
-        if (data?.banner) {
-            const imageFile = data.banner[0];
-            const imageUrl = await uploadImage(imageFile)
-            updateData.banner = imageUrl;
-        }
-      const result = await updateTicket(updateData, editingTicket?._id);
+        ...data,
+      };
 
-      if (result.insertedId) {
-        toast.success("Ticket submitted for verification");
+      if (data.image?.length > 0) {
+        const imageUrl = await uploadImage(
+          data.image[0]
+        );
 
-        router.push("/dashboard/vendor/added-tickets");
+        updateData.image = imageUrl;
+      }
+
+      const result = await updateTicket(
+        updateData,
+        editingTicket._id
+      );
+
+      if (
+        result?.modifiedCount > 0 ||
+        result?.success
+      ) {
+        toast.success("Ticket updated");
+
+        setIsModalOpen(false);
+
         router.refresh();
       } else {
-        toast.error("Failed to create ticket");
+        toast.error("Update failed");
       }
     } catch (error) {
       toast.error(error.message);
     }
   };
+
   return (
-    <div>
-      <DashboardHeading title="Add New Ticket" description="" />
-      <Modal isOpen={isModalOpen} onOpenChange={setIsModalOpen}>
-        <Modal.Backdrop>
-          <Modal.Container>
-            <Modal.Dialog className="dark text-white bg-slate-950 border border-white/10 p-6 rounded-2xl w-full max-w-lg mx-auto">
-              <div className="p-6">
-                <Form
-                  onSubmit={handleSubmit(onSubmit)}
-                  className="space-y-4 w-full"
-                >
-                  {/* Title + Image */}
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full">
-                    <div className="w-full">
-                      <Label htmlFor="title">Title</Label>
-                      <Input
-                        label="Ticket Title"
-                        className="w-full bg-slate-900/50 border-white/10 hover:border-pink-500/50 focus-within:!border-pink-500 p-3"
-                        labelPlacement="outside"
-                        placeholder="e.g. Rock Fest 2026"
-                        {...register("title", {
-                          required: "Ticket title is required",
-                        })}
-                      />
-                      {errors.title && (
-                        <p className="text-red-500 text-xs mt-1">
-                          {errors.title.message}
-                        </p>
-                      )}
-                    </div>
+    <Modal
+      isOpen={isModalOpen}
+      onOpenChange={setIsModalOpen}
+      size="4xl"
+      scrollBehavior="inside"
+    >
+      <Modal.Backdrop />
 
-                    <div className="w-full">
-                      <Label htmlFor="image">Image</Label>
-                      <Input
-                        {...register("image", {
-                          required: "Image is Required",
-                        })}
-                        type="file"
-                        accept="image/*"
-                        id="logo"
-                        placeholder="https://example.com/avatar.jpg"
-                        labelPlacement="outside"
-                        startContent={
-                          <FaImage className="text-slate-400 text-sm" />
-                        }
-                        className="w-full bg-slate-900/50 border-white/10 hover:border-pink-500/50 focus-within:!border-pink-500"
-                      />
-                      {errors.banner && (
-                        <p className="text-red-500">{errors.banner.message}</p>
-                      )}
-                      {errors.banner && (
-                        <p className="text-red-500 text-xs mt-1">
-                          {errors.banner.message}
-                        </p>
-                      )}
-                    </div>
-                  </div>
+      <Modal.Container>
+        <Modal.Dialog className="bg-white dark:bg-slate-950 border border-slate-200 dark:border-white/10 rounded-3xl">
 
-                  {/* Category + Location */}
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full">
-                    <div className="w-full">
-                      <Label htmlFor="transportType">Transport Type</Label>
-                      <select
-                        id="transportType"
-                        {...register("transportType", {
-                          required: "Transport type is required",
-                        })}
-                        className="w-full bg-slate-900/50 border-white/10 hover:border-pink-500/50 focus-within:!border-pink-500 p-3"
-                      >
-                        {TRANSPORT_TYPES.map((cat) => (
-                          <option key={cat} value={cat}>
-                            {cat}
-                          </option>
-                        ))}
-                      </select>
+          <div className="p-8">
 
-                      <input
-                        type="hidden"
-                        {...register("transportType", {
-                          required: "Transport type is required",
-                        })}
-                      />
+            <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-6">
+              Edit Ticket
+            </h2>
 
-                      {errors.transportType && (
-                        <p className="text-red-500 text-xs mt-1">
-                          {errors.transportType.message}
-                        </p>
-                      )}
-                    </div>
+            <Form
+              onSubmit={handleSubmit(onSubmit)}
+              className="space-y-6"
+            >
+              <div className="grid md:grid-cols-2 gap-5 w-full">
 
-                    <div className="w-full">
-                      <Label htmlFor="from">From</Label>
-                      <select
-                        id="from"
-                        {...register("from", { required: "From is required" })}
-                        className="w-full bg-slate-900/50 border-white/10 hover:border-pink-500/50 focus-within:!border-pink-500 p-3"
-                      >
-                        {FROM_LOCATIONS.map((loc) => (
-                          <option key={loc} value={loc}>
-                            {loc}
-                          </option>
-                        ))}
-                      </select>
+                <Input
+                  label="Ticket Title"
+                  labelPlacement="outside"
+                  {...register("title", {
+                    required: true,
+                  })}
+                />
 
-                      <input
-                        type="hidden"
-                        {...register("from", {
-                          required: "From is required",
-                        })}
-                      />
+                <Input
+                  type="file"
+                  accept="image/*"
+                  label="Replace Image"
+                  labelPlacement="outside"
+                  startContent={<FaImage />}
+                  {...register("image")}
+                />
 
-                      {errors.from && (
-                        <p className="text-red-500 text-xs mt-1">
-                          {errors.from.message}
-                        </p>
-                      )}
-                    </div>
-                    <div className="w-full">
-                      <Label htmlFor="to">To</Label>
-                      <select
-                        id="to"
-                        {...register("to", { required: "To is required" })}
-                        className="w-full bg-slate-900/50 border-white/10 hover:border-pink-500/50 focus-within:!border-pink-500 p-3"
-                      >
-                        {TO_LOCATIONS.map((loc) => (
-                          <option key={loc} value={loc}>
-                            {loc}
-                          </option>
-                        ))}
-                      </select>
-
-                      <input
-                        type="hidden"
-                        {...register("to", {
-                          required: "To is required",
-                        })}
-                      />
-
-                      {errors.to && (
-                        <p className="text-red-500 text-xs mt-1">
-                          {errors.to.message}
-                        </p>
-                      )}
-                    </div>
-                  </div>
-
-                  {/* Date + Price + Capacity */}
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4 w-full">
-                    <div>
-                      <Label htmlFor="date">Date</Label>
-                      <Input
-                        className="w-full bg-slate-900/50 border-white/10 hover:border-pink-500/50 focus-within:!border-pink-500 p-3"
-                        type="date"
-                        label="Date"
-                        labelPlacement="outside"
-                        {...register("date", {
-                          required: "Date is required",
-                        })}
-                      />
-
-                      {errors.date && (
-                        <p className="text-red-500 text-xs mt-1">
-                          {errors.date.message}
-                        </p>
-                      )}
-                    </div>
-
-                    <div>
-                      <Label htmlFor="price">Price</Label>
-                      <Input
-                        className="w-full bg-slate-900/50 border-white/10 hover:border-pink-500/50 focus-within:!border-pink-500 p-3"
-                        type="number"
-                        label="Ticket Price ($)"
-                        labelPlacement="outside"
-                        placeholder="0.00"
-                        {...register("price", {
-                          required: "Price is required",
-                          valueAsNumber: true,
-                          min: {
-                            value: 0,
-                            message: "Price cannot be negative",
-                          },
-                        })}
-                      />
-
-                      {errors.price && (
-                        <p className="text-red-500 text-xs mt-1">
-                          {errors.price.message}
-                        </p>
-                      )}
-                    </div>
-
-                    <div>
-                      <Label htmlFor="quantity">Quantity</Label>
-                      <Input
-                        type="number"
-                        label="Available Quantity"
-                        labelPlacement="outside"
-                        placeholder="100"
-                        {...register("quantity", {
-                          required: "Quantity is required",
-                          valueAsNumber: true,
-                          min: {
-                            value: 1,
-                            message: "Quantity must be at least 1",
-                          },
-                        })}
-                      />
-
-                      {errors.quantity && (
-                        <p className="text-red-500 text-xs mt-1">
-                          {errors.quantity.message}
-                        </p>
-                      )}
-                    </div>
-                  </div>
-
-                  {/* Perks */}
-                  <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-                    {PERKS.map((perk) => (
-                      <label key={perk} className="flex items-center gap-2">
-                        <input
-                          type="checkbox"
-                          value={perk}
-                          {...register("perks")}
-                        />
-
-                        <span>{perk}</span>
-                      </label>
-                    ))}
-                  </div>
-
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <Input
-                      label="Vendor Name"
-                      labelPlacement="outside"
-                      value={session?.user?.name || ""}
-                      isReadOnly
-                    />
-
-                    <Input
-                      label="Vendor Email"
-                      labelPlacement="outside"
-                      value={session?.user?.email || ""}
-                      isReadOnly
-                    />
-                  </div>
-
-                  <Button
-                    type="submit"
-                    className="bg-gradient-to-r from-pink-500 to-indigo-600 text-white font-bold h-11 px-6 shadow-lg shadow-pink-500/10"
-                    radius="lg"
-                  >
-                    Update Ticket
-                  </Button>
-                </Form>
               </div>
-            </Modal.Dialog>
-          </Modal.Container>
-        </Modal.Backdrop>
-      </Modal>
-    </div>
+
+              <div className="grid md:grid-cols-3 gap-5 w-full">
+
+                <select
+                  className="border rounded-xl p-3 bg-white dark:bg-slate-900"
+                  {...register("transportType")}
+                >
+                  {TRANSPORT_TYPES.map((item) => (
+                    <option
+                      key={item}
+                      value={item}
+                    >
+                      {item}
+                    </option>
+                  ))}
+                </select>
+
+                <select
+                  className="border rounded-xl p-3 bg-white dark:bg-slate-900"
+                  {...register("from")}
+                >
+                  {LOCATIONS.map((item) => (
+                    <option
+                      key={item}
+                      value={item}
+                    >
+                      {item}
+                    </option>
+                  ))}
+                </select>
+
+                <select
+                  className="border rounded-xl p-3 bg-white dark:bg-slate-900"
+                  {...register("to")}
+                >
+                  {LOCATIONS.map((item) => (
+                    <option
+                      key={item}
+                      value={item}
+                    >
+                      {item}
+                    </option>
+                  ))}
+                </select>
+
+              </div>
+
+              <div className="grid md:grid-cols-3 gap-5 w-full">
+
+                <Input
+                  type="date"
+                  label="Departure Date"
+                  labelPlacement="outside"
+                  {...register("departureDate")}
+                />
+
+                <Input
+                  type="number"
+                  label="Price"
+                  labelPlacement="outside"
+                  {...register("price", {
+                    valueAsNumber: true,
+                  })}
+                />
+
+                <Input
+                  type="number"
+                  label="Total Seats"
+                  labelPlacement="outside"
+                  {...register("quantity", {
+                    valueAsNumber: true,
+                  })}
+                />
+
+              </div>
+
+              <div className="grid md:grid-cols-3 gap-3">
+
+                {PERKS.map((perk) => (
+                  <label
+                    key={perk}
+                    className="flex items-center gap-2 text-sm"
+                  >
+                    <input
+                      type="checkbox"
+                      value={perk}
+                      {...register("perks")}
+                    />
+
+                    {perk}
+                  </label>
+                ))}
+
+              </div>
+
+              <div className="grid md:grid-cols-2 gap-4">
+
+                <Input
+                  label="Vendor Name"
+                  value={session?.user?.name || ""}
+                  isReadOnly
+                />
+
+                <Input
+                  label="Vendor Email"
+                  value={session?.user?.email || ""}
+                  isReadOnly
+                />
+
+              </div>
+
+              <div className="flex justify-end gap-3 pt-4">
+
+                <Button
+                  variant="bordered"
+                  onPress={() =>
+                    setIsModalOpen(false)
+                  }
+                >
+                  Cancel
+                </Button>
+
+                <Button
+                  type="submit"
+                  color="primary"
+                  isLoading={isSubmitting}
+                >
+                  Update Ticket
+                </Button>
+
+              </div>
+
+            </Form>
+
+          </div>
+
+        </Modal.Dialog>
+      </Modal.Container>
+    </Modal>
   );
 };
 

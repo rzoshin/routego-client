@@ -15,7 +15,7 @@ const VendorTickets = async () => {
     return (
         <div>
             <DashboardHeading
-                title="Manage Ticket"
+                title="My Added Tickets"
                 description="Manage ticket"
             />
             <Suspense fallback={<Spinner />}>

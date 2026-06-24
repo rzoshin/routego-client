@@ -17,6 +17,7 @@ import { uploadImage } from "@/utils/uploadImage";
 import { addTicket } from "@/lib/api/tickets/action";
 import { useSession } from "@/lib/auth-client";
 import { useForm } from "react-hook-form";
+import {redirect} from "next/navigation";
 
 const FROM_LOCATIONS = [
   "Dhaka",
@@ -67,21 +68,10 @@ const AddTickets = () => {
       const imageFile = data.image[0];
       const imageUrl = await uploadImage(imageFile);
 
+      delete data?.image;
       const ticketData = {
-        title: data.title,
-        from: data.from,
-        to: data.to,
-        transportType: data.transportType,
-
-        price: Number(data.price),
-        quantity: Number(data.quantity),
-
-        departureDate: data.date,
-
-        perks: data.perks || [],
-
-        image: imageFile ? imageUrl : null,
-
+        ...data,
+        image: imageUrl,
         vendorId: session.user.id,
         vendorName: session.user.name,
         vendorEmail: session.user.email,
@@ -94,8 +84,7 @@ const AddTickets = () => {
 
       if (result.insertedId) {
         toast.success("Ticket submitted for verification");
-
-        router.push("/dashboard/vendor/added-tickets");
+        redirect('/tickets');
         router.refresh();
       } else {
         toast.error("Failed to create ticket");
