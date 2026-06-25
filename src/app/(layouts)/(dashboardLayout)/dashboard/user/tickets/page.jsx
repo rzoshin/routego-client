@@ -1,23 +1,22 @@
-import DashboardHeading from '@/components/dashboard/DashboardHeading';
-import BookingsTable from "@/components/dashboard/user/BookingsTable";
-import React from 'react';
+import DashboardHeading from "@/components/dashboard/DashboardHeading";
+import BookingsGrid from "@/components/dashboard/user/BookingsGrid";
 import { fetchMyBooking } from "@/lib/api/bookings/data";
 import { getUser } from "@/lib/api/session";
 
 const UserTicketsPage = async () => {
-    const user = await getUser();
+  const user = await getUser();
+  const bookings = await fetchMyBooking(user?.email);
 
-    const bookings = await fetchMyBooking(user?.email);
-    // console.log(bookings);
-    return (
-        <div>
-            <DashboardHeading 
-            title="My Booked Tickets"
-            description="" />
+  return (
+    <div className="space-y-8">
+      <DashboardHeading
+        title="My Booked Tickets"
+        description="Track your booking requests, payments, and departures."
+      />
 
-        <BookingsTable bookings={bookings} />
-        </div>
-    );
+      <BookingsGrid bookings={Array.isArray(bookings) ? bookings : []} />
+    </div>
+  );
 };
 
 export default UserTicketsPage;

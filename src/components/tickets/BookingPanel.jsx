@@ -18,7 +18,8 @@ export default function BookingPanel({ ticket }) {
   const [isOpen, setIsOpen] = useState(false);
   const { data: session } = useSession();
   const price = ticket.price ?? 0;
-  const availableSeats = ticket.quantity - (ticket.bookedSeats || 0);
+  const availableSeats =
+    ticket.availableSeats ?? ticket.quantity - (ticket.bookedSeats || 0);
   const maxQty = availableSeats;
   const total = price * qty;
   const currency = "BDT"; // change to '$' if you prefer
@@ -56,6 +57,11 @@ export default function BookingPanel({ ticket }) {
       const bookingData = {
         ticketId: ticket._id,
         ticketTitle: ticket.title,
+        ticketImage: ticket.image,
+        from: ticket.from,
+        to: ticket.to,
+        departureDate: ticket.departureDate || ticket.date,
+        departureTime: ticket.departureTime || "",
         quantity: qty,
         totalPrice: qty * ticket.price,
         userEmail: session.user.email,
@@ -63,7 +69,6 @@ export default function BookingPanel({ ticket }) {
         vendorEmail: ticket.vendorEmail,
         bookingStatus: "pending",
         paymentStatus: "pending",
-        createdAt: new Date(),
       };
       const result = await addBooking(bookingData);
 
