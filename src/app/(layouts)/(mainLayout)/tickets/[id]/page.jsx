@@ -9,6 +9,7 @@ import {
 import { baseURL } from "@/lib/api/baseUrl";
 import Image from 'next/image';
 import BookingPanel from '@/components/tickets/BookingPanel';
+import Countdown from '@/components/shared/Countdown';
 
 // ── Transport icon map ────────────────────────────────────────────────────────
 const TRANSPORT_ICON = {
@@ -66,10 +67,21 @@ function InfoRow({ icon: Icon, label, value }) {
 }
 
 const fetchTicketById = async (id) => {
-    const res = await fetch(`${baseURL}/api/single-ticket/${id}`);
-    const data = await res.json();
-    return data;
-}
+  const res = await fetch(`${baseURL}/api/single-ticket/${id}`, {
+    cache: "no-store",
+  });
+
+  if (!res.ok) {
+    return null;
+  }
+
+  const data = await res.json();
+  if (data?.message || !data?._id) {
+    return null;
+  }
+
+  return data;
+};
 
 // ── Page ──────────────────────────────────────────────────────────────────────
 export default async function TicketDetailsPage({ params }) {
@@ -177,6 +189,15 @@ export default async function TicketDetailsPage({ params }) {
                   </div>
                 </div>
               </div>
+            </div>
+
+            {/* Departure countdown */}
+            <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+              <h2 className="mb-4 text-base font-bold text-slate-900">Departure countdown</h2>
+              <Countdown
+                departureDate={ticket.departureDate || ticket.date}
+                departureTime={ticket.departureTime}
+              />
             </div>
 
             {/* Perks */}

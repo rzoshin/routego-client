@@ -32,7 +32,20 @@ export default function BookingPanel({ ticket }) {
   const isSoldOut = availableSeats <= 0;
   const isExpired = departureDateTime < new Date();
 
+  const handleOpenBooking = () => {
+    if (!session?.user) {
+      router.push(`/login?callbackUrl=/tickets/${ticket._id}`);
+      return;
+    }
+    setIsOpen(true);
+  };
+
   const handleBookTicket = async () => {
+    if (!session?.user) {
+      router.push(`/login?callbackUrl=/tickets/${ticket._id}`);
+      return;
+    }
+
     try {
       setLoading(true);
 
@@ -140,7 +153,7 @@ export default function BookingPanel({ ticket }) {
 
         {/* Book button */}
         <button
-          onClick={() => setIsOpen(true)}
+          onClick={handleOpenBooking}
           disabled={loading || isExpired || isSoldOut}
           className="mt-4 inline-flex w-full items-center justify-center gap-2 rounded-xl bg-blue-600 px-6 py-3.5 text-base font-semibold text-white shadow-sm transition hover:bg-blue-700 active:scale-[0.99] disabled:opacity-70"
         >

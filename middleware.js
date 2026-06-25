@@ -1,20 +1,18 @@
 import { auth } from "@/lib/auth";
 import { NextResponse } from "next/server";
 
-const publicRoutes = ["/login", "/register", "/unauthorized"];
-
 export async function middleware(request) {
   const { pathname } = request.nextUrl;
+
+  if (pathname === "/tickets") {
+    return NextResponse.next();
+  }
 
   const isProtectedRoute =
     pathname.startsWith("/dashboard") ||
     /^\/tickets\/[^/]+$/.test(pathname);
 
   if (!isProtectedRoute) {
-    return NextResponse.next();
-  }
-
-  if (publicRoutes.includes(pathname)) {
     return NextResponse.next();
   }
 
@@ -32,5 +30,5 @@ export async function middleware(request) {
 }
 
 export const config = {
-  matcher: ["/dashboard/:path*", "/tickets/:id"],
+  matcher: ["/dashboard/:path*", "/tickets/:path*"],
 };

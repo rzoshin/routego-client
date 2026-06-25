@@ -12,10 +12,12 @@ const typeIcon = {
   Flight: Plane,
 }
 
-const TicketCard = ({ key, ticket, buttonText }) => {
+const TicketCard = ({ ticket, buttonText = "View Details" }) => {
   const [saved, setSaved] = useState(false)
-  const lowSeats = ticket.seats <= 5
-  const TypeIcon = typeIcon[ticket.transportType]
+  const availableSeats = ticket.quantity - (ticket.bookedSeats || 0)
+  const lowSeats = availableSeats <= 5
+  const TypeIcon = typeIcon[ticket.transportType] ?? Bus
+  const perks = Array.isArray(ticket.perks) ? ticket.perks : []
 
   return (
     <div className="group flex flex-col overflow-hidden rounded-2xl border border-border bg-card shadow-premium transition duration-300 hover:-translate-y-1.5 hover:border-primary/30 hover:shadow-premium-lg">
@@ -37,7 +39,7 @@ const TicketCard = ({ key, ticket, buttonText }) => {
         </span>
 
         {/* Featured */}
-        {ticket.featured && (
+        {ticket.isAdvertised && (
           <span className="absolute left-4 bottom-4 inline-flex items-center gap-1 rounded-full bg-accent px-2.5 py-1 text-xs font-semibold text-accent-foreground shadow-premium">
             <Sparkles className="h-3 w-3" />
             Featured
@@ -61,12 +63,17 @@ const TicketCard = ({ key, ticket, buttonText }) => {
         <div className="flex items-start justify-between gap-3">
           <div>
             <h3 className="text-base font-bold text-foreground">{ticket.title}</h3>
-            <p className="mt-0.5 text-xs text-muted-foreground">{ticket.departureDate}</p>
+            <p className="mt-0.5 text-xs text-muted-foreground">
+              {ticket.departureDate}
+              {ticket.departureTime ? ` · ${ticket.departureTime}` : ""}
+            </p>
           </div>
+          {ticket.rating && (
           <span className="inline-flex shrink-0 items-center gap-1 rounded-lg bg-secondary px-2 py-1 text-xs font-semibold text-secondary-foreground">
             <Star className="h-3 w-3 fill-accent text-accent" />
             {ticket.rating}
           </span>
+          )}
         </div>
 
         {/* Route timeline (Google Flights style) */}
@@ -76,7 +83,9 @@ const TicketCard = ({ key, ticket, buttonText }) => {
             <p className="text-xs text-muted-foreground">{ticket.from}</p>
           </div>
           <div className="flex flex-1 flex-col items-center">
-            <span className="text-[11px] font-medium text-muted-foreground">{ticket.duration}</span>
+            <span className="text-[11px] font-medium text-muted-foreground">
+              {ticket.transportType}
+            </span>
             <div className="mt-1 flex w-full items-center">
               <span className="h-2 w-2 rounded-full border-2 border-primary bg-card" />
               <span className="h-px flex-1 bg-border" />
@@ -93,8 +102,9 @@ const TicketCard = ({ key, ticket, buttonText }) => {
         </div>
 
         {/* Perks */}
+        {perks.length > 0 && (
         <div className="mt-5 flex flex-wrap gap-2">
-          {ticket.perks.map((perk) => (
+          {perks.map((perk) => (
             <span
               key={perk}
               className="rounded-md bg-secondary px-2.5 py-1 text-xs font-medium text-secondary-foreground"
@@ -103,6 +113,7 @@ const TicketCard = ({ key, ticket, buttonText }) => {
             </span>
           ))}
         </div>
+        )}
 
         <div
           className={`mt-4 inline-flex w-fit items-center gap-1.5 rounded-md px-2 py-1 text-xs font-semibold ${
@@ -110,7 +121,7 @@ const TicketCard = ({ key, ticket, buttonText }) => {
           }`}
         >
           <Users className="h-3.5 w-3.5" />
-          {lowSeats ? `Only ${ticket.quantity - (ticket.bookedSeats || 0)} seats left` : `${ticket.quantity - (ticket.bookedSeats || 0)} seats available`}
+          {lowSeats ? `Only ${availableSeats} seats left` : `${availableSeats} seats available`}
         </div>
 
         {/* Footer */}
@@ -127,7 +138,7 @@ const TicketCard = ({ key, ticket, buttonText }) => {
             size="sm"
             className="bg-indigo-600 hover:bg-indigo-500 text-white font-semibold h-9 px-4 text-xs"
           >
-            View Details
+            {buttonText}
             <ArrowRight className="h-4 w-4 transition group-hover/btn:translate-x-0.5" />
           </Button>
         </Link>

@@ -1,143 +1,150 @@
 "use client";
 
 import { useState } from "react";
-import { Card, Input, Button, Label, Select, SelectTrigger, SelectValue, SelectIndicator, SelectPopover, ListBox, ListBoxItem } from "@heroui/react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { Card, Input, Button, Label } from "@heroui/react";
 import { FaSearch, FaSlidersH, FaHistory } from "react-icons/fa";
-import { useRouter } from "next/navigation";
 
-const CATEGORIES = ["Music", "Tech", "Sports", "Arts", "Business", "Food", "Other"];
-const LOCATIONS = ["New York", "San Francisco", "London", "Dhaka", "Tokyo", "Berlin", "Online"];
+const LOCATIONS = [
+  "Dhaka",
+  "Chittagong",
+  "Sylhet",
+  "Khulna",
+  "Rajshahi",
+  "Barisal",
+  "Rangpur",
+  "Mymensingh",
+];
+
+const TRANSPORT_TYPES = ["Bus", "Train", "Flight", "Launch"];
 
 export default function FilterPanel() {
-  const [search, setSearch] = useState("");
-  const [category, setCategory] = useState("");
-  const [location, setLocation] = useState("");
   const router = useRouter();
+  const searchParams = useSearchParams();
 
-  // console.log(search, category, location);
+  const [search, setSearch] = useState(searchParams.get("search") || "");
+  const [from, setFrom] = useState(searchParams.get("from") || "");
+  const [to, setTo] = useState(searchParams.get("to") || "");
+  const [transportType, setTransportType] = useState(
+    searchParams.get("transportType") || ""
+  );
+  const [sort, setSort] = useState(searchParams.get("sort") || "");
 
   const handleApplyFilters = () => {
     const params = new URLSearchParams();
-    if (search) {
-      params.set("search", search);
-    }
-    if (category) {
-      params.set("category", category);
-    }
-    if (location) {
-      params.set("location", location);
-    }
-    router.push(`/events?${params.toString()}`);
+    if (search) params.set("search", search);
+    if (from) params.set("from", from);
+    if (to) params.set("to", to);
+    if (transportType) params.set("transportType", transportType);
+    if (sort) params.set("sort", sort);
+    params.set("page", "1");
+    router.push(`/tickets?${params.toString()}`);
   };
+
   const handleReset = () => {
     setSearch("");
-    setCategory("");
-    setLocation("");
-    router.push("/events")
-  }
-
+    setFrom("");
+    setTo("");
+    setTransportType("");
+    setSort("");
+    router.push("/tickets");
+  };
 
   return (
-    <Card className="relative overflow-hidden bg-slate-950/40 border border-white/10 backdrop-blur-2xl p-8 shadow-2xl rounded-3xl" radius="none">
-      {/* Decorative gradient glow behind the panel */}
-      <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-br from-pink-500/10 via-purple-600/5 to-transparent blur-3xl pointer-events-none -z-10" />
-      <div className="absolute bottom-0 left-0 w-64 h-64 bg-gradient-to-tr from-indigo-500/10 via-indigo-600/5 to-transparent blur-3xl pointer-events-none -z-10" />
-
-      <div className="gap-6 grid grid-cols-1 md:grid-cols-4 items-end">
-        {/* Search Input */}
-        <div className="flex flex-col gap-2">
-          <Label htmlFor="search-title" className="text-xs font-bold uppercase tracking-wider text-slate-400">Search Title</Label>
+    <Card className="relative overflow-hidden bg-slate-950/40 border border-white/10 backdrop-blur-2xl p-8 shadow-2xl rounded-3xl">
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-6 items-end">
+        <div className="flex flex-col gap-2 lg:col-span-2">
+          <Label htmlFor="search-title">Search Title</Label>
           <Input
-            value={search}
-            onChange={e => setSearch(e.target.value)}
             id="search-title"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
             placeholder="Search keyword..."
-            startContent={<FaSearch className="text-pink-500 text-sm mr-1" />}
-            variant="bordered"
-            className="w-full bg-slate-900/60 border border-white/10 rounded-xl p-3 focus:outline-none focus:border-pink-500 hover:border-white/20 text-white text-sm cursor-pointer h-12 flex items-center transition-all duration-300"
+            startContent={<FaSearch className="text-pink-500 text-sm" />}
+            className="h-12"
           />
         </div>
 
-        {/* Category Selector */}
         <div className="flex flex-col gap-2">
-          <Label htmlFor="filter-category" className="text-xs font-bold uppercase tracking-wider text-slate-400">Category</Label>
-          <div className="relative group">
-            <select
-              value={category}
-              onChange={(e) => setCategory(e.target.value)}
-              className="w-full h-12 bg-slate-900/60 border border-white/10 rounded-xl px-3 text-white text-sm outline-none focus:border-pink-500"
-            >
-              <option value="">All Categories</option>
-
-              {CATEGORIES.map((cat) => (
-                <option
-                  key={cat}
-                  value={cat}
-                  className="bg-slate-900 text-white"
-                >
-                  {cat}
-                </option>
-              ))}
-            </select>
-          </div>
+          <Label htmlFor="filter-from">From</Label>
+          <select
+            id="filter-from"
+            value={from}
+            onChange={(e) => setFrom(e.target.value)}
+            className="h-12 rounded-xl border border-white/10 bg-slate-900/60 px-3 text-sm text-white"
+          >
+            <option value="">All Locations</option>
+            {LOCATIONS.map((loc) => (
+              <option key={loc} value={loc}>
+                {loc}
+              </option>
+            ))}
+          </select>
         </div>
 
-        {/* Location Selector */}
         <div className="flex flex-col gap-2">
-          <Label htmlFor="filter-location" className="text-xs font-bold uppercase tracking-wider text-slate-400">Location</Label>
-          <div className="relative group">
-            <div className="relative w-full">
-              <select
-                value={location}
-                onChange={(e) => setLocation(e.target.value)}
-                className="w-full h-12 bg-slate-900/60 border border-white/10 rounded-xl px-3 pr-10 text-white text-sm appearance-none outline-none focus:border-pink-500"
-              >
-                <option value="">All Locations</option>
-
-                {LOCATIONS.map((loc) => (
-                  <option
-                    key={loc}
-                    value={loc}
-                    className="bg-slate-900 text-white"
-                  >
-                    {loc}
-                  </option>
-                ))}
-              </select>
-
-              <svg
-                className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M19 9l-7 7-7-7"
-                />
-              </svg>
-            </div>
-          </div>
+          <Label htmlFor="filter-to">To</Label>
+          <select
+            id="filter-to"
+            value={to}
+            onChange={(e) => setTo(e.target.value)}
+            className="h-12 rounded-xl border border-white/10 bg-slate-900/60 px-3 text-sm text-white"
+          >
+            <option value="">All Locations</option>
+            {LOCATIONS.map((loc) => (
+              <option key={loc} value={loc}>
+                {loc}
+              </option>
+            ))}
+          </select>
         </div>
 
-        {/* Action Buttons */}
-        <div className="flex gap-3 w-full">
+        <div className="flex flex-col gap-2">
+          <Label htmlFor="filter-transport">Transport</Label>
+          <select
+            id="filter-transport"
+            value={transportType}
+            onChange={(e) => setTransportType(e.target.value)}
+            className="h-12 rounded-xl border border-white/10 bg-slate-900/60 px-3 text-sm text-white"
+          >
+            <option value="">All Types</option>
+            {TRANSPORT_TYPES.map((type) => (
+              <option key={type} value={type}>
+                {type}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        <div className="flex flex-col gap-2">
+          <Label htmlFor="filter-sort">Sort By Price</Label>
+          <select
+            id="filter-sort"
+            value={sort}
+            onChange={(e) => setSort(e.target.value)}
+            className="h-12 rounded-xl border border-white/10 bg-slate-900/60 px-3 text-sm text-white"
+          >
+            <option value="">Default</option>
+            <option value="price_asc">Low to High</option>
+            <option value="price_desc">High to Low</option>
+          </select>
+        </div>
+
+        <div className="flex gap-3">
           <Button
             onClick={handleApplyFilters}
-            className="flex-grow bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-600 text-white font-bold h-12 shadow-lg shadow-pink-500/25 hover:shadow-pink-500/40 hover:scale-[1.02] active:scale-95 transition-all duration-200"
+            className="flex-grow bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-600 text-white font-bold h-12"
             startContent={<FaSlidersH size={13} />}
           >
-            Apply Filters
+            Apply
           </Button>
           <Button
             onClick={handleReset}
             variant="bordered"
-            className="border-white/10 hover:border-white/20 hover:bg-white/5 text-white font-semibold h-12 transition-all duration-200 px-4 min-w-0"
+            className="border-white/10 text-white h-12 px-4"
             title="Reset Filters"
           >
-            <FaHistory size={13} className="text-slate-400 hover:text-white" />
+            <FaHistory size={13} />
           </Button>
         </div>
       </div>

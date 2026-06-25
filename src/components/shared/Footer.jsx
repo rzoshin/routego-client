@@ -29,8 +29,7 @@ const Footer = () => {
               <span className="tracking-tight">RouteGo</span>
             </div>
             <p className="text-sm leading-relaxed text-muted-foreground">
-              One journey, endless destinations. Your trusted travel booking platform for Bus,
-              Train, Launch, and Flight tickets.
+              Book bus, train, launch and flight tickets easily with RouteGo.
             </p>
           </div>
 
@@ -39,16 +38,16 @@ const Footer = () => {
             <h4 className="mb-4 text-sm font-semibold text-foreground">Quick Links</h4>
             <ul className="space-y-3 text-sm text-muted-foreground">
               <li>
-                <Link href="#" className="transition hover:text-primary">Home</Link>
+                <Link href="/" className="transition hover:text-primary">Home</Link>
               </li>
               <li>
-                <Link href="#" className="transition hover:text-primary">All Tickets</Link>
+                <Link href="/tickets" className="transition hover:text-primary">All Tickets</Link>
               </li>
               <li>
-                <Link href="#" className="transition hover:text-primary">Dashboard</Link>
+                <Link href="/register" className="transition hover:text-primary">Contact Us</Link>
               </li>
               <li>
-                <Link href="#" className="transition hover:text-primary">Become a Vendor</Link>
+                <Link href="/tickets" className="transition hover:text-primary">About</Link>
               </li>
             </ul>
           </div>
@@ -78,7 +77,7 @@ const Footer = () => {
             <ul className="space-y-3 text-sm text-muted-foreground">
               <li className="flex items-center gap-2">
                 <CreditCard className="h-4 w-4 text-primary" />
-                Credit & Debit Cards
+                Stripe
               </li>
               <li className="flex items-center gap-2">
                 <Wallet className="h-4 w-4 text-primary" />
