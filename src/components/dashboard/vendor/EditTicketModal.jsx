@@ -12,7 +12,7 @@ import { useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 
-import { FaImage } from "react-icons/fa";
+import { FaImage, FaEdit } from "react-icons/fa";
 
 import { uploadImage } from "@/utils/uploadImage";
 import { updateTicket } from "@/lib/api/tickets/action";
@@ -49,9 +49,7 @@ const PERKS = [
 ];
 
 const EditTicketModal = ({
-  isModalOpen,
-  setIsModalOpen,
-  editingTicket,
+  ticket
 }) => {
   const router = useRouter();
 
@@ -65,12 +63,12 @@ const EditTicketModal = ({
   } = useForm();
 
   useEffect(() => {
-    if (editingTicket) {
+    if (ticket) {
       reset({
-        ...editingTicket,
+        ...ticket,
       });
     }
-  }, [editingTicket, reset]);
+  }, [ticket, reset]);
 
   const onSubmit = async (data) => {
     try {
@@ -88,7 +86,7 @@ const EditTicketModal = ({
 
       const result = await updateTicket(
         updateData,
-        editingTicket._id
+        ticket._id
       );
 
       if (
@@ -110,22 +108,18 @@ const EditTicketModal = ({
 
   return (
     <Modal
-      isOpen={isModalOpen}
-      onOpenChange={setIsModalOpen}
-      size="4xl"
-      scrollBehavior="inside"
     >
-      <Modal.Backdrop />
-
+      <Button isIconOnly size="sm" radius="full" className="h-8 w-8 min-w-0 p-0 border border-indigo-500/20 bg-indigo-500/10 text-indigo-400 hover:bg-indigo-500/20 hover:scale-[1.03] transition-all duration-200"><FaEdit size={12} /></Button>
+      <Modal.Backdrop className="bg-black/50 backdrop-blur-sm">
       <Modal.Container>
-        <Modal.Dialog className="bg-white dark:bg-slate-950 border border-slate-200 dark:border-white/10 rounded-3xl">
-
-          <div className="p-8">
-
-            <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-6">
+          <Modal.Dialog>
+          <Modal.Header>
+            <Modal.Icon className="text-indigo-500" /> 
+            <Modal.Heading className="text-2xl font-bold text-slate-900 dark:text-white mb-6">
               Edit Ticket
-            </h2>
-
+            </Modal.Heading>
+            </Modal.Header>
+          <Modal.Body>
             <Form
               onSubmit={handleSubmit(onSubmit)}
               className="space-y-6"
@@ -260,14 +254,12 @@ const EditTicketModal = ({
                 />
 
               </div>
-
               <div className="flex justify-end gap-3 pt-4">
 
                 <Button
                   variant="bordered"
-                  onPress={() =>
-                    setIsModalOpen(false)
-                  }
+                  color="secondary"
+                  slot="close"
                 >
                   Cancel
                 </Button>
@@ -276,6 +268,7 @@ const EditTicketModal = ({
                   type="submit"
                   color="primary"
                   isLoading={isSubmitting}
+                  slot="close"
                 >
                   Update Ticket
                 </Button>
@@ -283,13 +276,11 @@ const EditTicketModal = ({
               </div>
 
             </Form>
-
-          </div>
-
-        </Modal.Dialog>
+          </Modal.Body>
+          </Modal.Dialog>
       </Modal.Container>
+      </Modal.Backdrop>
     </Modal>
   );
 };
-
 export default EditTicketModal;

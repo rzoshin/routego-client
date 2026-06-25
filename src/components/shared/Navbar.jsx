@@ -88,7 +88,7 @@ export function Navbar() {
           {/* Auth Buttons / User Menu */}
           <div className="hidden md:flex items-center gap-2">
             <ThemeSwitcher />
-            {!session && !session?.user ? (
+            {!session?.user ? (
               <>
                 <Link
                   href="/login"
@@ -96,9 +96,12 @@ export function Navbar() {
                 >
                   Login
                 </Link>
-                <button className="rounded-lg bg-primary px-5 py-2 text-sm font-semibold text-primary-foreground shadow-premium transition hover:bg-primary/90">
+                <Link
+                  href="/register"
+                  className="rounded-lg bg-primary px-5 py-2 text-sm font-semibold text-primary-foreground shadow-premium transition hover:bg-primary/90"
+                >
                   Get Started
-                </button>
+                </Link>
               </>
             ) : (
               <div className="relative" ref={dropdownRef}>
@@ -132,7 +135,7 @@ export function Navbar() {
 
                     {/* Actions */}
                     <Link
-                      href="/dashboard/organizer"
+                      href={`/dashboard/${session.user.role}`}
                       onClick={() => setDropdownOpen(false)}
                       className="w-full flex items-center gap-2.5 px-4 py-2.5 text-left text-xs font-semibold text-slate-300 hover:text-white hover:bg-white/5 transition cursor-pointer"
                     >
@@ -193,23 +196,38 @@ export function Navbar() {
                   </Link>
                 );
               })}
-              {!session ? (
+              {!session?.user ? (
                 <>
                   <ThemeSwitcher />
-                  <Button className="text-foreground hover:text-primary transition text-left">
+                  <Link
+                    href="/login"
+                    className="text-foreground hover:text-primary transition"
+                  >
                     Login
-                  </Button>
-                  <Button className="bg-primary text-primary-foreground px-6 py-2 rounded-lg hover:bg-primary/90 transition font-semibold w-full">
+                  </Link>
+                  <Link
+                    href="/register"
+                    className="bg-primary text-primary-foreground px-6 py-2 rounded-lg hover:bg-primary/90 transition font-semibold w-full text-center"
+                  >
                     Get Started
-                  </Button>
+                  </Link>
                 </>
               ) : (
                 <>
                   <ThemeSwitcher />
-                  <Button className="text-foreground hover:text-primary transition flex items-center gap-2">
+                  <Link
+                    href={`/dashboard/${session.user.role}`}
+                    className="text-foreground hover:text-primary transition"
+                  >
+                    My Dashboard
+                  </Link>
+                  <button
+                    onClick={handleLogout}
+                    className="text-foreground hover:text-primary transition flex items-center gap-2"
+                  >
                     <LogOut className="w-4 h-4" />
                     Logout
-                  </Button>
+                  </button>
                 </>
               )}
             </div>

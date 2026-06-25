@@ -1,22 +1,15 @@
-"use client";
-import DashboardSideBar from "@/components/dashboard/DashboardSidebar";
-import Footer from "@/components/shared/Footer";
-const DashboardLayout = ({ children }) => {
+import { getUser } from "@/lib/api/session";
+import { redirect } from "next/navigation";
+import DashboardShell from "@/components/dashboard/DashboardShell";
 
-    return (
-        <div className="min-h-screen">
-            <div className="flex">
-                <aside className="w-64 h-screen border-r border-gray-200">
-                    <DashboardSideBar />
-                </aside>
-                
-                <main className="px-6 py-10 max-w-5xl w-full">
-                    {children}
-                </main>
-            </div>
-            <Footer />
-        </div>
-    );
+const DashboardLayout = async ({ children }) => {
+  const user = await getUser();
+
+  if (!user) {
+    redirect("/login");
+  }
+
+  return <DashboardShell>{children}</DashboardShell>;
 };
-// /dashboard/organizer 
+
 export default DashboardLayout;

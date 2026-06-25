@@ -4,7 +4,7 @@ import { deleteTicket } from "@/lib/api/tickets/action";
 import { Button, Modal } from "@heroui/react";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
-import { FaTrashAlt } from "react-icons/fa";
+import { FaTrash, FaTrashAlt } from "react-icons/fa";
 
 const DeleteTicketModal = ({
   isDeleteOpen,
@@ -31,11 +31,9 @@ const DeleteTicketModal = ({
 
   return (
     <Modal
-      isOpen={isDeleteOpen}
-      onOpenChange={setIsDeleteOpen}
-      size="md"
     >
-      <Modal.Backdrop />
+      <Button isIconOnly size="sm" radius="full" className="h-8 w-8 min-w-0 p-0 border border-red-500/20 bg-red-500/10 text-red-400 hover:bg-red-500/20 hover:scale-[1.03] transition-all duration-200"> <FaTrash size={12} /></Button>
+      <Modal.Backdrop>
 
       <Modal.Container>
         <Modal.Dialog className="bg-white dark:bg-slate-950 border border-slate-200 dark:border-white/10 rounded-3xl shadow-2xl">
@@ -60,14 +58,15 @@ const DeleteTicketModal = ({
 
               <Button
                 variant="bordered"
-                onPress={() => setIsDeleteOpen(false)}
+                slot="close"
               >
                 Cancel
               </Button>
 
               <Button
                 color="danger"
-                onPress={handleDeleteTicket}
+                onClick={handleDeleteTicket}
+                slot="close"
               >
                 Delete Ticket
               </Button>
@@ -76,7 +75,8 @@ const DeleteTicketModal = ({
           </div>
 
         </Modal.Dialog>
-      </Modal.Container>
+        </Modal.Container>
+      </Modal.Backdrop>
     </Modal>
   );
 };

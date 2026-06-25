@@ -53,14 +53,11 @@ const VendorManageTickets = ({ tickets }) => {
                                             <TableCell className="py-4 px-6 align-middle">
                                                 <div className="flex gap-2">
                                                     <div className="group relative flex items-center justify-center w-fit">
-                                                        <Button isIconOnly size="sm" radius="full" className="h-8 w-8 min-w-0 p-0 border border-indigo-500/20 bg-indigo-500/10 text-indigo-400 hover:bg-indigo-500/20 hover:scale-[1.03] transition-all duration-200" onClick={() => { setEditingTicket({ ...ticket }); setIsModalOpen(true); }}><FaEdit size={12} /></Button>
+                                                        <EditTicketModal ticket={ticket}/>
                                                         <span className="pointer-events-none absolute -top-8 left-1/2 -translate-x-1/2 scale-0 transition-all duration-150 rounded-lg bg-slate-950 border border-white/10 px-2 py-1 text-[10px] text-white group-hover:scale-100 font-semibold z-30 whitespace-nowrap shadow-xl">Edit Ticket</span>
                                                     </div>
                                                     <div className="group relative flex items-center justify-center w-fit">
-                                                        <Button isIconOnly size="sm" radius="full" className="h-8 w-8 min-w-0 p-0 border border-red-500/20 bg-red-500/10 text-red-400 hover:bg-red-500/20 hover:scale-[1.03] transition-all duration-200" onClick={() => {
-                                                            setDeletedId(ticket._id)
-                                                            setIsDeleteOpen(true)
-                                                        }}><FaTrash size={12} /></Button>
+                                                        <DeleteTicketModal id={ticket._id} />
                                                         <span className="pointer-events-none absolute -top-8 left-1/2 -translate-x-1/2 scale-0 transition-all duration-150 rounded-lg bg-slate-950 border border-white/10 px-2 py-1 text-[10px] text-white group-hover:scale-100 font-semibold z-30 whitespace-nowrap shadow-xl">Delete Ticket</span>
                                                     </div>
                                                 </div>
@@ -75,8 +72,6 @@ const VendorManageTickets = ({ tickets }) => {
             </div>
 
             {/* TICKET EDIT MODAL */}
-            <EditTicketModal isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} editingTicket={editingTicket}/>
-            <DeleteTicketModal isDeleteOpen={isDeleteOpen} setIsDeleteOpen={setIsDeleteOpen} id={deletedId} />
         </div>
     );
 };

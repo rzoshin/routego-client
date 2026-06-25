@@ -54,14 +54,13 @@ export default function RegisterPage() {
       // 2. Only run these if the signup was completely successful
       const userData = {
         email: formData.email,
-        password: formData.password,
         name: formData.name,
         role: formData.role,
-      }
-      const resData = await createUser(userData);
+      };
+      await createUser(userData);
 
       toast.success("Account created successfully!");
-      router.push("/login");
+      router.push("/");
     } catch (error) {
       toast.error(`Registration failed: ${error.message}`);
     }
