@@ -1,83 +1,83 @@
 "use client";
 
+import { useState } from "react";
 import { deleteTicket } from "@/lib/api/tickets/action";
 import { Button, Modal } from "@heroui/react";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import { FaTrash, FaTrashAlt } from "react-icons/fa";
 
-const DeleteTicketModal = ({
-  isDeleteOpen,
-  setIsDeleteOpen,
-  id,
-}) => {
+const DeleteTicketModal = ({ ticketId, disabled = false }) => {
   const router = useRouter();
+  const [isOpen, setIsOpen] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   const handleDeleteTicket = async () => {
     try {
-      const res = await deleteTicket(id);
+      setIsDeleting(true);
+      const res = await deleteTicket(ticketId);
 
-      if (res?.deletedCount > 0) {
+      if (res?.deletedCount > 0 || res?.success) {
         toast.success("Ticket deleted successfully");
+        setIsOpen(false);
         router.refresh();
-        setIsDeleteOpen(false);
       } else {
-        toast.error("Failed to delete ticket");
+        toast.error(res?.message || "Failed to delete ticket");
       }
     } catch {
       toast.error("Something went wrong");
+    } finally {
+      setIsDeleting(false);
     }
   };
 
   return (
-    <Modal
-    >
-      <Button isIconOnly size="sm" radius="full" className="h-8 w-8 min-w-0 p-0 border border-red-500/20 bg-red-500/10 text-red-400 hover:bg-red-500/20 hover:scale-[1.03] transition-all duration-200"> <FaTrash size={12} /></Button>
-      <Modal.Backdrop>
+    <>
+      <Button
+        isIconOnly
+        size="sm"
+        radius="full"
+        isDisabled={disabled}
+        className="h-8 w-8 min-w-0 border border-red-500/20 bg-red-500/10 text-red-400 hover:bg-red-500/20"
+        onPress={() => setIsOpen(true)}
+      >
+        <FaTrash size={12} />
+      </Button>
 
-      <Modal.Container>
-        <Modal.Dialog className="bg-white dark:bg-slate-950 border border-slate-200 dark:border-white/10 rounded-3xl shadow-2xl">
+      <Modal isOpen={isOpen} onOpenChange={setIsOpen}>
+        <Modal.Backdrop>
+          <Modal.Container>
+            <Modal.Dialog className="rounded-3xl border border-white/10 bg-slate-950 shadow-2xl">
+              <div className="p-8 text-center">
+                <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-red-500/10 text-red-500">
+                  <FaTrashAlt size={24} />
+                </div>
 
-          <div className="p-8 text-center">
+                <h3 className="text-xl font-bold text-white">Delete Ticket</h3>
 
-            <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-red-500/10 text-red-500">
-              <FaTrashAlt size={24} />
-            </div>
+                <p className="mt-3 text-sm text-slate-400">
+                  This action cannot be undone. The ticket will be permanently
+                  removed.
+                </p>
 
-            <h3 className="text-xl font-bold text-slate-900 dark:text-white">
-              Delete Ticket
-            </h3>
-
-            <p className="mt-3 text-sm text-slate-500 dark:text-slate-400">
-              This action cannot be undone.
-              The ticket and all related data
-              will be permanently removed.
-            </p>
-
-            <div className="flex justify-center gap-3 mt-8">
-
-              <Button
-                variant="bordered"
-                slot="close"
-              >
-                Cancel
-              </Button>
-
-              <Button
-                color="danger"
-                onClick={handleDeleteTicket}
-                slot="close"
-              >
-                Delete Ticket
-              </Button>
-
-            </div>
-          </div>
-
-        </Modal.Dialog>
-        </Modal.Container>
-      </Modal.Backdrop>
-    </Modal>
+                <div className="mt-8 flex justify-center gap-3">
+                  <Button variant="bordered" onPress={() => setIsOpen(false)}>
+                    Cancel
+                  </Button>
+                  <Button
+                    color="danger"
+                    isLoading={isDeleting}
+                    onPress={handleDeleteTicket}
+                  >
+                    Delete Ticket
+                  </Button>
+                </div>
+              </div>
+            </Modal.Dialog>
+          </Modal.Container>
+        </Modal.Backdrop>
+      </Modal>
+    </>
   );
 };
 

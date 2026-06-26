@@ -28,7 +28,7 @@ const DashboardSideBar = () => {
   const adminMenu = [
     { key: "profile", label: "My Profile", icon: FaUserShield, href: "/dashboard/admin" },
     { key: "manage-tickets", label: "Manage Tickets", icon: FaCalendarAlt, href: "/dashboard/admin/tickets" },
-    { key: "manage-users", label: "Manage Users", icon: FaUsers, href: "/dashboard/admin/admin/users" },
+    { key: "manage-users", label: "Manage Users", icon: FaUsers, href: "/dashboard/admin/users" },
     { key: "advertise-tickets", label: "Advertise Tickets", icon: FaHistory, href: "/dashboard/admin/advertise-tickets" },
   ]
 

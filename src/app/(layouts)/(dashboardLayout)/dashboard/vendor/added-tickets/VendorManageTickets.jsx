@@ -1,79 +1,101 @@
-"use client"
+"use client";
 
 import DeleteTicketModal from "@/components/dashboard/vendor/DeleteTicketModal";
 import EditTicketModal from "@/components/dashboard/vendor/EditTicketModal";
-import { Button, Card, Chip, Table, TableBody, TableCell, TableColumn, TableContent, TableHeader, TableRow } from "@heroui/react";
-import { useState } from "react";
-import { FaEdit, FaTrash } from "react-icons/fa";
+import { Card, Chip } from "@heroui/react";
+import Image from "next/image";
+import { MapPin } from "lucide-react";
 
-const VendorManageTickets = ({ tickets }) => {
-    const [deletedId, setDeletedId] = useState(null);
-    const [isModalOpen, setIsModalOpen] = useState(false);
-    const [editingTicket, setEditingTicket] = useState(null);
-    const [isDeleteOpen, setIsDeleteOpen] = useState(null);
+const statusStyles = {
+  approved: "bg-green-500/10 text-green-400 border-green-500/20",
+  rejected: "bg-red-500/10 text-red-400 border-red-500/20",
+  pending: "bg-yellow-500/10 text-yellow-400 border-yellow-500/20",
+};
 
+const VendorManageTickets = ({ tickets = [] }) => {
+  if (!tickets.length) {
     return (
-        <div>
-            <div className="mt-6">
-                <Card className="border border-white/5 bg-slate-900/40 backdrop-blur-xl shadow-2xl p-6 rounded-2xl">
-                    <div className="p-0 overflow-x-auto">
+      <Card className="border border-white/5 bg-slate-900/40 backdrop-blur-xl p-10 rounded-2xl text-center">
+        <p className="font-medium text-slate-500">
+          You have not added any tickets yet.
+        </p>
+      </Card>
+    );
+  }
 
-                        <Table aria-label="Manage Events Table" >
-                            <TableContent>
-                                <TableHeader className="bg-slate-950/40 border-b border-white/5 rounded-t-xl">
-                                    <TableColumn className="py-4 px-6 text-slate-400 font-extrabold uppercase text-[11px] tracking-wider border-b border-white/5 bg-slate-950/20" isRowHeader>TICKET TITLE</TableColumn>
-                                    <TableColumn className="py-4 px-6 text-slate-400 font-extrabold uppercase text-[11px] tracking-wider border-b border-white/5 bg-slate-950/20">TRANSPORT TYPE</TableColumn>
-                                    <TableColumn className="py-4 px-6 text-slate-400 font-extrabold uppercase text-[11px] tracking-wider border-b border-white/5 bg-slate-950/20">DATE</TableColumn>
-                                    <TableColumn className="py-4 px-6 text-slate-400 font-extrabold uppercase text-[11px] tracking-wider border-b border-white/5 bg-slate-950/20">TICKET PRICE</TableColumn>
-                                    <TableColumn className="py-4 px-6 text-slate-400 font-extrabold uppercase text-[11px] tracking-wider border-b border-white/5 bg-slate-950/20">AVAILABLE SEATS</TableColumn>
-                                    <TableColumn className="py-4 px-6 text-slate-400 font-extrabold uppercase text-[11px] tracking-wider border-b border-white/5 bg-slate-950/20">STATUS</TableColumn>
-                                    <TableColumn className="py-4 px-6 text-slate-400 font-extrabold uppercase text-[11px] tracking-wider border-b border-white/5 bg-slate-950/20">ACTIONS</TableColumn>
-                                </TableHeader>
-                                <TableBody emptyContent={<p className="text-slate-500 py-10 text-center font-medium">You haven not added any tickets yet.</p>}>
-                                    {tickets?.map((ticket) => (
-                                        <TableRow key={ticket._id} className="border-b border-white/5 hover:bg-white/5 transition-colors duration-150 last:border-b-0">
-                                            <TableCell className="py-4 px-6 align-middle font-bold text-white"><span className="line-clamp-1 truncate max-w-[150px]">{ticket.title}</span></TableCell>
-                                            <TableCell className="py-4 px-6 align-middle text-slate-300 font-medium">{ticket.transportType}</TableCell>
-                                            <TableCell className="py-4 px-6 align-middle text-slate-300 font-medium">{ticket.departureDate}</TableCell>
-                                            <TableCell className="py-4 px-6 align-middle font-semibold text-green-400">${ticket.price?.toFixed(2)}</TableCell>
-                                            <TableCell className="py-4 px-6 align-middle text-slate-300 font-medium">{ticket.quantity} seats</TableCell>
-                                            <TableCell className="py-4 px-6 align-middle">
-                                                <Chip
-                                                    size="sm"
-                                                    className={`font-bold uppercase text-[10px] tracking-wider border px-2.5 py-1 ${ticket.status === "approved"
-                                                        ? "bg-green-500/10 text-green-400 border-green-500/20"
-                                                        : ticket.status === "rejected"
-                                                            ? "bg-red-500/10 text-red-400 border-red-500/20"
-                                                            : "bg-yellow-500/10 text-yellow-400 border-yellow-500/20"
-                                                        }`}
-                                                >
-                                                    {ticket.status || "pending"}
-                                                </Chip>
-                                            </TableCell>
-                                            <TableCell className="py-4 px-6 align-middle">
-                                                <div className="flex gap-2">
-                                                    <div className="group relative flex items-center justify-center w-fit">
-                                                        <EditTicketModal ticket={ticket}/>
-                                                        <span className="pointer-events-none absolute -top-8 left-1/2 -translate-x-1/2 scale-0 transition-all duration-150 rounded-lg bg-slate-950 border border-white/10 px-2 py-1 text-[10px] text-white group-hover:scale-100 font-semibold z-30 whitespace-nowrap shadow-xl">Edit Ticket</span>
-                                                    </div>
-                                                    <div className="group relative flex items-center justify-center w-fit">
-                                                        <DeleteTicketModal id={ticket._id} />
-                                                        <span className="pointer-events-none absolute -top-8 left-1/2 -translate-x-1/2 scale-0 transition-all duration-150 rounded-lg bg-slate-950 border border-white/10 px-2 py-1 text-[10px] text-white group-hover:scale-100 font-semibold z-30 whitespace-nowrap shadow-xl">Delete Ticket</span>
-                                                    </div>
-                                                </div>
-                                            </TableCell>
-                                        </TableRow>
-                                    ))}
-                                </TableBody>
-                            </TableContent>
-                        </Table>
-                    </div>
-                </Card>
+  return (
+    <div className="mt-6 grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3">
+      {tickets.map((ticket) => {
+        const status = ticket.verificationStatus || "pending";
+        const isRejected = status === "rejected";
+
+        return (
+          <Card
+            key={ticket._id}
+            className="overflow-hidden border border-white/5 bg-slate-900/40 backdrop-blur-xl shadow-2xl rounded-2xl"
+          >
+            <div className="relative h-44 w-full">
+              <Image
+                src={ticket.image || "/bus-ticket.png"}
+                alt={ticket.title}
+                fill
+                unoptimized
+                className="object-cover"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent" />
+              <Chip
+                size="sm"
+                className={`absolute left-4 top-4 font-bold uppercase text-[10px] tracking-wider border ${statusStyles[status] || statusStyles.pending}`}
+              >
+                {status}
+              </Chip>
             </div>
 
-            {/* TICKET EDIT MODAL */}
-        </div>
-    );
+            <div className="space-y-4 p-5">
+              <div>
+                <h3 className="text-lg font-bold text-white line-clamp-1">
+                  {ticket.title}
+                </h3>
+                <p className="mt-1 flex items-center gap-1.5 text-sm text-slate-400">
+                  <MapPin className="h-3.5 w-3.5" />
+                  {ticket.from} → {ticket.to}
+                </p>
+              </div>
+
+              <div className="grid grid-cols-2 gap-3 text-sm">
+                <div>
+                  <p className="text-slate-500">Transport</p>
+                  <p className="font-semibold text-white">{ticket.transportType}</p>
+                </div>
+                <div>
+                  <p className="text-slate-500">Departure</p>
+                  <p className="font-semibold text-white">
+                    {ticket.departureDate || "TBA"}
+                    {ticket.departureTime ? ` · ${ticket.departureTime}` : ""}
+                  </p>
+                </div>
+                <div>
+                  <p className="text-slate-500">Price</p>
+                  <p className="font-semibold text-green-400">
+                    BDT {Number(ticket.price || 0).toLocaleString()}
+                  </p>
+                </div>
+                <div>
+                  <p className="text-slate-500">Seats</p>
+                  <p className="font-semibold text-white">{ticket.quantity}</p>
+                </div>
+              </div>
+
+              <div className="flex gap-2 pt-1">
+                <EditTicketModal ticket={ticket} disabled={isRejected} />
+                <DeleteTicketModal ticketId={ticket._id} disabled={isRejected} />
+              </div>
+            </div>
+          </Card>
+        );
+      })}
+    </div>
+  );
 };
 
 export default VendorManageTickets;

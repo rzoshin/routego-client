@@ -16,7 +16,7 @@ export default function ProfileStats({ stats }) {
       : stats.role === "vendor"
         ? [
             { label: "Tickets Added", value: stats.ticketsAdded },
-            { label: "Approved", value: stats.approvedTickets },
+            { label: "Tickets Sold", value: stats.ticketsSold ?? 0 },
             { label: "Pending Requests", value: stats.pendingRequests },
             { label: "Revenue", value: `BDT ${stats.totalRevenue || 0}` },
           ]

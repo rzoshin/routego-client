@@ -1,5 +1,6 @@
 "use server";
 
+import { revalidatePath } from "next/cache";
 import { serverMutation } from "../server";
 
 export const addBooking = async (bookingData) => {
@@ -13,5 +14,6 @@ export const updateBookingStatus = async (bookingId, status) => {
     `/api/bookings/${bookingId}/status`,
     "PATCH"
   );
+  revalidatePath("/dashboard/vendor/bookings");
   return resData;
 };
