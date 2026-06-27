@@ -1,3 +1,4 @@
+"use client";
 import Image from "next/image";
 import { Card, Chip } from "@heroui/react";
 
@@ -18,9 +19,9 @@ export default function ProfileCard({ user, profile }) {
     : "Recently joined";
 
   return (
-    <Card className="border border-white/5 bg-slate-900/40 backdrop-blur-xl shadow-2xl p-6 rounded-2xl">
+    <Card className="border border-border bg-background/40 backdrop-blur-xl p-6 rounded-2xl shadow-xl text-foreground">
       <div className="flex flex-col items-center text-center sm:flex-row sm:items-start sm:text-left gap-5">
-        <div className="relative h-24 w-24 shrink-0 overflow-hidden rounded-full border-2 border-blue-500/50">
+        <div className="relative h-24 w-24 shrink-0 overflow-hidden rounded-full border-2 border-border/50">
           <Image
             src={avatarUrl}
             alt={user?.name || "User avatar"}
@@ -38,16 +39,16 @@ export default function ProfileCard({ user, profile }) {
             >
               {role}
             </Chip>
-            <h2 className="mt-2 text-2xl font-bold text-white">{user?.name}</h2>
-            <p className="text-sm text-slate-400">{user?.email}</p>
+            <h2 className="mt-2 text-2xl font-bold">{user?.name}</h2>
+            <p className="text-sm">{user?.email}</p>
           </div>
 
           <div className="grid grid-cols-1 gap-2 text-sm sm:grid-cols-2">
-            <p className="text-slate-300">
-              <span className="text-slate-500">Member since:</span> {memberSince}
+            <p>
+              <span>Member since:</span> {memberSince}
             </p>
-            <p className="text-slate-300">
-              <span className="text-slate-500">Account type:</span>{" "}
+            <p>
+              <span>Account type:</span>{" "}
               {role.charAt(0).toUpperCase() + role.slice(1)}
             </p>
           </div>

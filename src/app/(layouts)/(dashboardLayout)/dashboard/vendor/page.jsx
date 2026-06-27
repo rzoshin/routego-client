@@ -1,5 +1,4 @@
 import { Suspense } from "react";
-import { Spinner } from "@heroui/react";
 import DashboardHeading from "@/components/dashboard/DashboardHeading";
 import ProfileCard from "@/components/dashboard/ProfileCard";
 import ProfileStats from "@/components/dashboard/ProfileStats";
@@ -31,7 +30,7 @@ const VendorProfile = async () => {
       <Suspense
         fallback={
           <div className="flex justify-center py-10">
-            <Spinner />
+            Loading ...
           </div>
         }
       >

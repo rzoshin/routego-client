@@ -109,12 +109,12 @@ export default function AddTicketForm({ isFraud = false }) {
 
       <div className="mt-6 max-w-3xl">
         <Card
-          className="rounded-2xl border border-white/5 bg-slate-900/40 shadow-2xl backdrop-blur-xl"
+          className="rounded-2xl border border-border/5 bg-background/40 backdrop-blur-xl shadow-xl"
           radius="lg"
         >
-          <CardHeader className="flex flex-col gap-1 border-b border-white/5 p-6 pb-4">
-            <h3 className="text-xl font-bold text-white">Ticket Details</h3>
-            <p className="text-xs text-slate-400">
+          <CardHeader className="flex flex-col gap-1 border-b border-border/5 p-6 pb-4">
+            <h3 className="text-xl font-bold text-foreground">Ticket Details</h3>
+            <p className="text-xs text-muted-foreground">
               All fields are required unless marked optional.
             </p>
           </CardHeader>
@@ -128,7 +128,7 @@ export default function AddTicketForm({ isFraud = false }) {
                 <div className="w-full">
                   <Label htmlFor="title">Title</Label>
                   <Input
-                    className="w-full border-white/10 bg-slate-900/50 p-3 hover:border-pink-500/50 focus-within:!border-pink-500"
+                    className="w-full border-border/5 bg-background/40 p-3 hover:border-primary/50 focus-within:!border-primary"
                     labelPlacement="outside"
                     placeholder="e.g. Dhaka to Cox's Bazar Express"
                     isDisabled={isFraud}
@@ -149,8 +149,8 @@ export default function AddTicketForm({ isFraud = false }) {
                     type="file"
                     accept="image/*"
                     isDisabled={isFraud}
-                    startContent={<FaImage className="text-sm text-slate-400" />}
-                    className="w-full border-white/10 bg-slate-900/50 hover:border-pink-500/50 focus-within:!border-pink-500"
+                    startContent={<FaImage className="text-sm text-muted-foreground" />}
+                    className="w-full border-border/5 bg-background/40 hover:border-primary/50 focus-within:!border-primary"
                     {...register("image", { required: "Image is required" })}
                   />
                   {errors.image ? (
@@ -170,7 +170,7 @@ export default function AddTicketForm({ isFraud = false }) {
                     {...register("transportType", {
                       required: "Transport type is required",
                     })}
-                    className="w-full rounded-xl border border-white/10 bg-slate-900/50 p-3 text-white"
+                    className="w-full rounded-xl border border-border/5 bg-background/40 p-3 text-foreground"
                   >
                     {TRANSPORT_TYPES.map((cat) => (
                       <option key={cat} value={cat}>
@@ -186,7 +186,7 @@ export default function AddTicketForm({ isFraud = false }) {
                     id="from"
                     disabled={isFraud}
                     {...register("from", { required: "From is required" })}
-                    className="w-full rounded-xl border border-white/10 bg-slate-900/50 p-3 text-white"
+                    className="w-full rounded-xl border border-border/5 bg-background/40 p-3 text-foreground"
                   >
                     {FROM_LOCATIONS.map((loc) => (
                       <option key={loc} value={loc}>
@@ -202,7 +202,7 @@ export default function AddTicketForm({ isFraud = false }) {
                     id="to"
                     disabled={isFraud}
                     {...register("to", { required: "To is required" })}
-                    className="w-full rounded-xl border border-white/10 bg-slate-900/50 p-3 text-white"
+                    className="w-full rounded-xl border border-border/5 bg-background/40 p-3 text-foreground"
                   >
                     {TO_LOCATIONS.map((loc) => (
                       <option key={loc} value={loc}>
@@ -219,7 +219,7 @@ export default function AddTicketForm({ isFraud = false }) {
                   <Input
                     type="date"
                     isDisabled={isFraud}
-                    className="w-full border-white/10 bg-slate-900/50 p-3"
+                    className="w-full border-border/5 bg-background/40 p-3"
                     {...register("departureDate", {
                       required: "Departure date is required",
                     })}
@@ -231,7 +231,7 @@ export default function AddTicketForm({ isFraud = false }) {
                   <Input
                     type="time"
                     isDisabled={isFraud}
-                    className="w-full border-white/10 bg-slate-900/50 p-3"
+                    className="w-full border-border/5 bg-background/40 p-3"
                     {...register("departureTime", {
                       required: "Departure time is required",
                     })}
@@ -244,7 +244,7 @@ export default function AddTicketForm({ isFraud = false }) {
                     type="number"
                     isDisabled={isFraud}
                     placeholder="0"
-                    className="w-full border-white/10 bg-slate-900/50 p-3"
+                    className="w-full border-border/5 bg-background/40 p-3"
                     {...register("price", {
                       required: "Price is required",
                       valueAsNumber: true,
@@ -259,7 +259,7 @@ export default function AddTicketForm({ isFraud = false }) {
                     type="number"
                     isDisabled={isFraud}
                     placeholder="100"
-                    className="w-full border-white/10 bg-slate-900/50 p-3"
+                    className="w-full border-border/5 bg-background/40 p-3"
                     {...register("quantity", {
                       required: "Quantity is required",
                       valueAsNumber: true,
@@ -271,7 +271,7 @@ export default function AddTicketForm({ isFraud = false }) {
 
               <div className="grid grid-cols-2 gap-3 md:grid-cols-3">
                 {PERKS.map((perk) => (
-                  <label key={perk} className="flex items-center gap-2 text-sm text-slate-300">
+                  <label key={perk} className="flex items-center gap-2 text-sm text-muted-foreground">
                     <input
                       type="checkbox"
                       value={perk}
@@ -302,7 +302,7 @@ export default function AddTicketForm({ isFraud = false }) {
                 type="submit"
                 isDisabled={isFraud}
                 isLoading={isSubmitting}
-                className="h-11 bg-gradient-to-r from-pink-500 to-indigo-600 px-6 font-bold text-white shadow-lg shadow-pink-500/10"
+                className="h-11 bg-gradient-to-r from-primary to-primary/80 px-6 font-bold text-primary-foreground shadow-lg shadow-primary/10"
                 radius="lg"
               >
                 Add Ticket

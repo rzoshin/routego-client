@@ -33,7 +33,7 @@ export default function BookingCard({ booking }) {
   };
 
   return (
-    <div className="flex flex-col overflow-hidden rounded-2xl border border-white/5 bg-slate-900/40 backdrop-blur-xl shadow-2xl">
+    <div className="flex flex-col overflow-hidden rounded-2xl border border-border/5 bg-card backdrop-blur-xl shadow-2xl">
       <div className="relative h-44 w-full">
         <Image
           src={booking.ticketImage || "/bus-ticket.png"}
@@ -53,8 +53,8 @@ export default function BookingCard({ booking }) {
 
       <div className="flex flex-1 flex-col gap-4 p-5">
         <div>
-          <h3 className="text-lg font-bold text-white">{booking.ticketTitle}</h3>
-          <p className="mt-1 flex items-center gap-1.5 text-sm text-slate-400">
+          <h3 className="text-lg font-bold">{booking.ticketTitle}</h3>
+          <p className="mt-1 flex items-center gap-1.5 text-sm">
             <MapPin className="h-3.5 w-3.5" />
             {booking.from} → {booking.to}
           </p>
@@ -62,25 +62,25 @@ export default function BookingCard({ booking }) {
 
         <div className="grid grid-cols-2 gap-3 text-sm">
           <div>
-            <p className="text-slate-500">Quantity</p>
-            <p className="font-semibold text-white">{booking.quantity}</p>
+            <p>Quantity</p>
+            <p className="font-semibold">{booking.quantity}</p>
           </div>
           <div>
-            <p className="text-slate-500">Total</p>
-            <p className="font-semibold text-green-400">
+            <p>Total</p>
+            <p className="font-semibold">
               BDT {Number(booking.totalPrice || 0).toLocaleString()}
             </p>
           </div>
           <div>
-            <p className="text-slate-500">Departure</p>
-            <p className="font-semibold text-white">
+            <p>Departure</p>
+            <p className="font-semibold">
               {booking.departureDate || "TBA"}
               {booking.departureTime ? ` · ${booking.departureTime}` : ""}
             </p>
           </div>
           <div>
-            <p className="text-slate-500">Booked on</p>
-            <p className="font-semibold text-white">
+            <p>Booked on</p>
+            <p className="font-semibold">
               {booking.createdAt
                 ? new Date(booking.createdAt).toLocaleDateString()
                 : "-"}
@@ -90,7 +90,7 @@ export default function BookingCard({ booking }) {
 
         {showCountdown && (
           <div>
-            <p className="mb-2 text-xs font-semibold uppercase tracking-wider text-slate-500">
+            <p className="mb-2 text-xs font-semibold uppercase tracking-wider">
               Departure countdown
             </p>
             <Countdown
@@ -104,7 +104,7 @@ export default function BookingCard({ booking }) {
           {canPay && (
             <Button
               onClick={handlePayNow}
-              className="w-full bg-blue-600 text-white font-semibold"
+              className="w-full bg-primary text-primary-foreground font-semibold"
               startContent={<CreditCard className="h-4 w-4" />}
             >
               Pay Now
@@ -112,14 +112,14 @@ export default function BookingCard({ booking }) {
           )}
 
           {status === "accepted" && departurePassed && (
-            <p className="text-center text-xs text-red-400">
+            <p className="text-center text-xs text-destructive">
               Payment unavailable — departure time has passed.
             </p>
           )}
 
           <Link
             href={`/tickets/${booking.ticketId}`}
-            className="text-center text-sm font-medium text-blue-400 hover:text-blue-300"
+            className="text-center text-sm font-medium text-primary hover:text-primary-foreground"
           >
             View ticket details
           </Link>

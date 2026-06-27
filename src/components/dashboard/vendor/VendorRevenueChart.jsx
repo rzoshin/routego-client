@@ -6,8 +6,8 @@ function BarChart({ title, data, valueKey, colorClass }) {
   const maxValue = Math.max(...data.map((item) => item[valueKey] || 0), 1);
 
   return (
-    <Card className="border border-white/5 bg-slate-900/40 backdrop-blur-xl p-6 rounded-2xl">
-      <h3 className="mb-6 text-lg font-bold text-white">{title}</h3>
+    <Card className="border border-border/5 bg-background/40 backdrop-blur-xl p-6 rounded-2xl">
+      <h3 className="mb-6 text-lg font-bold text-foreground">{title}</h3>
       <div className="flex h-56 items-end justify-between gap-3">
         {data.map((item) => {
           const value = item[valueKey] || 0;
@@ -18,7 +18,7 @@ function BarChart({ title, data, valueKey, colorClass }) {
               key={item.month}
               className="flex flex-1 flex-col items-center gap-2"
             >
-              <p className="text-xs font-semibold text-slate-300">
+              <p className="text-xs font-semibold text-muted-foreground">
                 {valueKey === "revenue"
                   ? `BDT ${value.toLocaleString()}`
                   : value}
@@ -29,7 +29,7 @@ function BarChart({ title, data, valueKey, colorClass }) {
                   style={{ height }}
                 />
               </div>
-              <p className="text-[10px] font-medium uppercase tracking-wide text-slate-500">
+              <p className="text-[10px] font-medium uppercase tracking-wide text-muted-foreground">
                 {item.month}
               </p>
             </div>
@@ -50,27 +50,27 @@ export default function VendorRevenueChart({ stats }) {
   return (
     <div className="space-y-6">
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
-        <Card className="border border-white/5 bg-slate-900/40 backdrop-blur-xl p-5 rounded-2xl">
-          <p className="text-xs font-semibold uppercase tracking-wider text-slate-400">
+        <Card className="border border-border/5 bg-background/40 backdrop-blur-xl p-5 rounded-2xl">
+          <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
             Tickets Added
           </p>
-          <p className="mt-2 text-3xl font-bold text-white">
+          <p className="mt-2 text-3xl font-bold text-foreground">
             {stats.ticketsAdded || 0}
           </p>
         </Card>
-        <Card className="border border-white/5 bg-slate-900/40 backdrop-blur-xl p-5 rounded-2xl">
-          <p className="text-xs font-semibold uppercase tracking-wider text-slate-400">
+        <Card className="border border-border/5 bg-background/40 backdrop-blur-xl p-5 rounded-2xl">
+          <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
             Tickets Sold
           </p>
-          <p className="mt-2 text-3xl font-bold text-white">
+          <p className="mt-2 text-3xl font-bold text-foreground">
             {stats.ticketsSold || 0}
           </p>
         </Card>
-        <Card className="border border-white/5 bg-slate-900/40 backdrop-blur-xl p-5 rounded-2xl">
-          <p className="text-xs font-semibold uppercase tracking-wider text-slate-400">
+        <Card className="border border-border/5 bg-background/40 backdrop-blur-xl p-5 rounded-2xl">
+          <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
             Total Revenue
           </p>
-          <p className="mt-2 text-3xl font-bold text-green-400">
+          <p className="mt-2 text-3xl font-bold text-green-600">
             BDT {(stats.totalRevenue || 0).toLocaleString()}
           </p>
         </Card>

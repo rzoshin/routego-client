@@ -1,24 +1,42 @@
-import {baseURL} from "./baseUrl";
+import { baseURL } from "./baseUrl";
 
-export const serverMutation = async (data, path, method) => {
-    const res = await fetch(`${baseURL}${path}`, {
-        method: method,
-        headers: {
-            "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
-    });
-    return res.json();
+async function parseResponse(res) {
+  const text = await res.text();
+  if (!text) return null;
+  try {
+    return JSON.parse(text);
+  } catch {
+    return null;
+  }
 }
 
+export const serverMutation = async (data, path, method) => {
+  try {
+    const res = await fetch(`${baseURL}${path}`, {
+      method,
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(data),
+    });
+    return parseResponse(res);
+  } catch {
+    return null;
+  }
+};
+
 export const deleteMutation = async (path) => {
-  const res = await fetch(`${baseURL}${path}`, {
-    method: 'DELETE',
-  });
-  return res.json();
+  try {
+    const res = await fetch(`${baseURL}${path}`, { method: "DELETE" });
+    return parseResponse(res);
+  } catch {
+    return null;
+  }
 };
 
 export const serverFetch = async (path) => {
-    const res = await fetch(`${baseURL}${path}`);
-    return res.json();
-}
+  try {
+    const res = await fetch(`${baseURL}${path}`, { cache: "no-store" });
+    return parseResponse(res);
+  } catch {
+    return null;
+  }
+};

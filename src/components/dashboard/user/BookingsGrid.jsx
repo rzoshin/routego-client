@@ -3,9 +3,9 @@ import BookingCard from "./BookingCard";
 export default function BookingsGrid({ bookings = [] }) {
   if (!bookings.length) {
     return (
-      <div className="rounded-2xl border border-white/5 bg-slate-900/40 backdrop-blur-xl p-12 text-center">
-        <p className="text-lg font-semibold text-white">No booked tickets yet</p>
-        <p className="mt-2 text-sm text-slate-400">
+      <div className="rounded-2xl border border-border bg-card/40 backdrop-blur-xl p-12 text-center">
+        <p className="text-lg font-semibold">No booked tickets yet</p>
+        <p className="mt-2 text-sm">
           Browse available routes and book your first ticket.
         </p>
       </div>

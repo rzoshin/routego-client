@@ -1,3 +1,4 @@
+"use client";
 import { Card } from "@heroui/react";
 
 export default function ProfileStats({ stats }) {
@@ -31,12 +32,12 @@ export default function ProfileStats({ stats }) {
       {items.map((item) => (
         <Card
           key={item.label}
-          className="border border-white/5 bg-slate-900/40 backdrop-blur-xl p-5 rounded-2xl"
+          className="border border-border bg-background/40 backdrop-blur-xl p-5 rounded-2xl"
         >
-          <p className="text-xs font-semibold uppercase tracking-wider text-slate-400">
+          <p className="text-xs font-semibold uppercase tracking-wider">
             {item.label}
           </p>
-          <p className="mt-2 text-2xl font-bold text-white">{item.value}</p>
+          <p className="mt-2 text-2xl font-bold">{item.value}</p>
         </Card>
       ))}
     </div>

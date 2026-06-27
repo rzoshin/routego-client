@@ -1,3 +1,5 @@
+"use client";
+
 import Link from "next/link";
 import { Card } from "@heroui/react";
 import { FaCalendarAlt, FaHistory, FaPlus, FaUsers } from "react-icons/fa";
@@ -39,21 +41,21 @@ export default function VendorQuickLinks({ isFraud = false }) {
           return (
             <Card
               key={href}
-              className="border border-white/5 bg-slate-900/20 p-5 rounded-2xl opacity-50"
+              className="border border-border/5 bg-background/20 p-5 rounded-2xl opacity-50"
             >
-              <Icon className="mb-3 text-slate-500" size={20} />
-              <p className="font-semibold text-slate-400">{label}</p>
-              <p className="mt-1 text-xs text-slate-500">{description}</p>
+              <Icon className="mb-3 text-muted-foreground" size={20} />
+              <p className="font-semibold text-muted-foreground">{label}</p>
+              <p className="mt-1 text-xs text-muted-foreground">{description}</p>
             </Card>
           );
         }
 
         return (
           <Link key={href} href={href}>
-            <Card className="border border-white/5 bg-slate-900/40 backdrop-blur-xl p-5 rounded-2xl transition-colors hover:border-indigo-500/30 hover:bg-slate-900/60 h-full">
-              <Icon className="mb-3 text-indigo-400" size={20} />
-              <p className="font-semibold text-white">{label}</p>
-              <p className="mt-1 text-xs text-slate-400">{description}</p>
+            <Card className="border border-border/5 bg-background/40 backdrop-blur-xl p-5 rounded-2xl transition-colors hover:border-indigo-500/30 hover:bg-background/60 h-full">
+              <Icon className="mb-3 text-primary" size={20} />
+              <p className="font-semibold text-foreground">{label}</p>
+              <p className="mt-1 text-xs text-muted-foreground">{description}</p>
             </Card>
           </Link>
         );

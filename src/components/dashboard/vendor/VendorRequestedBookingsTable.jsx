@@ -47,33 +47,33 @@ export default function VendorRequestedBookingsTable({ bookings = [] }) {
   };
 
   return (
-    <Card className="border border-white/5 bg-slate-900/40 backdrop-blur-xl shadow-2xl p-6 rounded-2xl">
+    <Card className="border border-border bg-card/40 backdrop-blur-xl shadow-xl p-6 rounded-2xl">
       <div className="overflow-x-auto">
         <Table aria-label="Requested bookings table">
           <TableContent>
-            <TableHeader className="bg-slate-950/40 border-b border-white/5 rounded-t-xl">
-              <TableColumn className="py-4 px-6 text-slate-400 font-extrabold uppercase text-[11px] tracking-wider">
+            <TableHeader className="bg-background/40 border-b border-border/5 rounded-t-xl">
+              <TableColumn className="py-4 px-6 text-muted-foreground font-extrabold uppercase text-[11px] tracking-wider">
                 USER
               </TableColumn>
-              <TableColumn className="py-4 px-6 text-slate-400 font-extrabold uppercase text-[11px] tracking-wider">
+              <TableColumn className="py-4 px-6 text-muted-foreground font-extrabold uppercase text-[11px] tracking-wider">
                 TICKET
               </TableColumn>
-              <TableColumn className="py-4 px-6 text-slate-400 font-extrabold uppercase text-[11px] tracking-wider">
+              <TableColumn className="py-4 px-6 text-muted-foreground font-extrabold uppercase text-[11px] tracking-wider">
                 QUANTITY
               </TableColumn>
-              <TableColumn className="py-4 px-6 text-slate-400 font-extrabold uppercase text-[11px] tracking-wider">
+              <TableColumn className="py-4 px-6 text-muted-foreground font-extrabold uppercase text-[11px] tracking-wider">
                 TOTAL PRICE
               </TableColumn>
-              <TableColumn className="py-4 px-6 text-slate-400 font-extrabold uppercase text-[11px] tracking-wider">
+              <TableColumn className="py-4 px-6 text-muted-foreground font-extrabold uppercase text-[11px] tracking-wider">
                 STATUS
               </TableColumn>
-              <TableColumn className="py-4 px-6 text-slate-400 font-extrabold uppercase text-[11px] tracking-wider">
+              <TableColumn className="py-4 px-6 text-muted-foreground font-extrabold uppercase text-[11px] tracking-wider">
                 ACTIONS
               </TableColumn>
             </TableHeader>
             <TableBody
               emptyContent={
-                <p className="py-10 text-center font-medium text-slate-500">
+                <p className="py-10 text-center font-medium">
                   No booking requests yet.
                 </p>
               }
@@ -85,25 +85,25 @@ export default function VendorRequestedBookingsTable({ bookings = [] }) {
                 return (
                   <TableRow
                     key={booking._id}
-                    className="border-b border-white/5 hover:bg-white/5 transition-colors last:border-b-0"
+                    className="border-b border-border/5 hover:bg-background/5 transition-colors last:border-b-0"
                   >
                     <TableCell className="py-4 px-6 align-middle">
                       <div>
-                        <p className="font-semibold text-white">
+                        <p className="font-semibold">
                           {booking.userName || "User"}
                         </p>
-                        <p className="text-xs text-slate-400">
+                        <p className="text-xs">
                           {booking.userEmail}
                         </p>
                       </div>
                     </TableCell>
-                    <TableCell className="py-4 px-6 align-middle font-medium text-slate-300">
+                    <TableCell className="py-4 px-6 align-middle font-medium">
                       {booking.ticketTitle}
                     </TableCell>
-                    <TableCell className="py-4 px-6 align-middle text-slate-300">
+                    <TableCell className="py-4 px-6 align-middle">
                       {booking.quantity}
                     </TableCell>
-                    <TableCell className="py-4 px-6 align-middle font-semibold text-green-400">
+                    <TableCell className="py-4 px-6 align-middle font-semibold text-green-600">
                       BDT {Number(booking.totalPrice || 0).toLocaleString()}
                     </TableCell>
                     <TableCell className="py-4 px-6 align-middle">
@@ -139,7 +139,7 @@ export default function VendorRequestedBookingsTable({ bookings = [] }) {
                           </Button>
                         </div>
                       ) : (
-                        <span className="text-xs text-slate-500">—</span>
+                        <span className="text-xs">—</span>
                       )}
                     </TableCell>
                   </TableRow>
