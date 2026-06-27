@@ -11,10 +11,10 @@ export default function ThemeSwitcher() {
   return (
     <button
       onClick={() => {setIsDark(!isDark); setTheme(theme === "dark" ? "light" : "dark");}}
-      className="w-9 h-9 rounded-xl flex items-center justify-center border border-white/5 text-yellow-400 hover:bg-slate-800/80 transition-all duration-200 cursor-pointer"
+      className="flex h-9 w-9 items-center justify-center rounded-xl border border-border text-primary transition-all duration-200 hover:bg-secondary cursor-pointer"
       aria-label="Toggle theme"
     >
-      {isDark ? <FaSun size={15} /> : <FaMoon size={14} className="text-slate-300" />}
+      {isDark ? <FaSun size={15} /> : <FaMoon size={14} className="text-muted-foreground" />}
     </button>
   );
 }

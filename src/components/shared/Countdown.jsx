@@ -55,12 +55,12 @@ export default function Countdown({ departureDate, departureTime, className = ""
       ].map(({ label, value }) => (
         <div
           key={label}
-          className="flex min-w-[4.5rem] flex-col items-center rounded-xl border border-slate-200 bg-slate-50 px-3 py-2"
+          className="flex min-w-[4.5rem] flex-col items-center rounded-xl border border-border bg-secondary px-3 py-2"
         >
-          <span className="text-xl font-bold text-slate-900">
+          <span className="text-xl font-bold text-foreground">
             {String(value).padStart(2, "0")}
           </span>
-          <span className="text-[10px] font-semibold uppercase tracking-wide text-slate-500">
+          <span className="text-[10px] font-semibold uppercase tracking-wide text-muted-foreground">
             {label}
           </span>
         </div>

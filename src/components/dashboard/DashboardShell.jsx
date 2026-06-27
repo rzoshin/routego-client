@@ -5,13 +5,10 @@ import Footer from "@/components/shared/Footer";
 
 const DashboardShell = ({ children }) => {
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen bg-background text-foreground">
       <div className="flex">
-        <aside className="w-64 h-screen border-r border-gray-200">
-          <DashboardSideBar />
-        </aside>
-
-        <main className="px-6 py-10 max-w-5xl w-full">{children}</main>
+        <DashboardSideBar />
+        <main className="w-full max-w-5xl flex-1 px-6 py-10">{children}</main>
       </div>
       <Footer />
     </div>

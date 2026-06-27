@@ -47,15 +47,15 @@ const DeleteTicketModal = ({ ticketId, disabled = false }) => {
       <Modal isOpen={isOpen} onOpenChange={setIsOpen}>
         <Modal.Backdrop>
           <Modal.Container>
-            <Modal.Dialog className="rounded-3xl border border-white/10 bg-slate-950 shadow-2xl">
+            <Modal.Dialog className="rounded-3xl border border-border bg-card shadow-2xl">
               <div className="p-8 text-center">
                 <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-red-500/10 text-red-500">
                   <FaTrashAlt size={24} />
                 </div>
 
-                <h3 className="text-xl font-bold text-white">Delete Ticket</h3>
+                <h3 className="text-xl font-bold text-foreground">Delete Ticket</h3>
 
-                <p className="mt-3 text-sm text-slate-400">
+                <p className="mt-3 text-sm text-muted-foreground">
                   This action cannot be undone. The ticket will be permanently
                   removed.
                 </p>

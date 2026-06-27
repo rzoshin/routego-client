@@ -1,0 +1,15 @@
+"use server";
+
+import { revalidatePath } from "next/cache";
+import { serverMutation } from "../server";
+
+export const completePayment = async (bookingId, userEmail) => {
+  const resData = await serverMutation(
+    { bookingId, userEmail },
+    "/api/payments/complete",
+    "POST"
+  );
+  revalidatePath("/dashboard/user/tickets");
+  revalidatePath("/dashboard/user/transactions");
+  return resData;
+};

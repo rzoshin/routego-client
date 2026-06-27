@@ -44,7 +44,7 @@ function StatusBadge({ status }) {
 // ── Perk chip ─────────────────────────────────────────────────────────────────
 function PerkChip({ label }) {
   return (
-    <span className="inline-flex items-center gap-1.5 rounded-lg border border-slate-200 bg-slate-50 px-3 py-1.5 text-sm font-medium text-slate-700">
+    <span className="inline-flex items-center gap-1.5 rounded-lg border border-border bg-secondary px-3 py-1.5 text-sm font-medium text-foreground">
       <CheckCircle2 className="h-3.5 w-3.5 text-blue-500" />
       {label}
     </span>
@@ -55,12 +55,12 @@ function PerkChip({ label }) {
 function InfoRow({ icon: Icon, label, value }) {
   return (
     <div className="flex items-start gap-3 py-3">
-      <div className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-blue-50">
-        <Icon className="h-4 w-4 text-blue-600" />
+      <div className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-primary/10">
+        <Icon className="h-4 w-4 text-primary" />
       </div>
       <div>
-        <p className="text-xs font-semibold uppercase tracking-wide text-slate-400">{label}</p>
-        <p className="mt-0.5 text-sm font-medium text-slate-800">{value}</p>
+        <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">{label}</p>
+        <p className="mt-0.5 text-sm font-medium text-foreground">{value}</p>
       </div>
     </div>
   )
@@ -93,19 +93,19 @@ export default async function TicketDetailsPage({ params }) {
   const transportColor = TRANSPORT_COLOR[ticket.transportType] ?? TRANSPORT_COLOR.Bus
 
   return (
-    <div className="min-h-screen bg-slate-50/60">
+    <div className="min-h-screen bg-background">
       {/* ── Breadcrumb / Back ───────────────────────────────────────────── */}
-      <div className="border-b border-slate-200 bg-white">
+      <div className="border-b border-border bg-card">
         <div className="mx-auto flex max-w-7xl items-center gap-2 px-4 py-4 sm:px-6 lg:px-8">
           <Link
             href="/tickets"
-            className="inline-flex items-center gap-2 rounded-lg px-3 py-1.5 text-sm font-medium text-slate-600 transition hover:bg-slate-100 hover:text-slate-900"
+            className="inline-flex items-center gap-2 rounded-lg px-3 py-1.5 text-sm font-medium text-muted-foreground transition hover:bg-secondary hover:text-foreground"
           >
             <ArrowLeft className="h-4 w-4" />
             All Tickets
           </Link>
-          <span className="text-slate-300">/</span>
-          <span className="text-sm text-slate-500 truncate">{ticket.title}</span>
+          <span className="text-border">/</span>
+          <span className="truncate text-sm text-muted-foreground">{ticket.title}</span>
         </div>
       </div>
 
@@ -157,15 +157,15 @@ export default async function TicketDetailsPage({ params }) {
             </div>
 
             {/* Route card */}
-            <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
-              <div className="border-b border-slate-100 px-6 py-4">
-                <h2 className="text-base font-bold text-slate-900">Route Details</h2>
+            <div className="overflow-hidden rounded-2xl border border-border bg-card shadow-sm">
+              <div className="border-b border-border px-6 py-4">
+                <h2 className="text-base font-bold text-foreground">Route Details</h2>
               </div>
-              <div className="grid grid-cols-1 divide-y divide-slate-100 px-6 sm:grid-cols-2 sm:divide-x sm:divide-y-0">
+              <div className="grid grid-cols-1 divide-y divide-border px-6 sm:grid-cols-2 sm:divide-x sm:divide-y-0">
                 <div className="flex flex-col items-center justify-center py-8 text-center">
-                  <p className="text-xs font-semibold uppercase tracking-widest text-slate-400">From</p>
-                  <p className="mt-2 text-2xl font-extrabold text-slate-900">{ticket.from}</p>
-                  <div className="mt-1 flex items-center gap-1 text-slate-400">
+                  <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">From</p>
+                  <p className="mt-2 text-2xl font-extrabold text-foreground">{ticket.from}</p>
+                  <div className="mt-1 flex items-center gap-1 text-muted-foreground">
                     <MapPin className="h-3.5 w-3.5" />
                     <span className="text-xs">Departure</span>
                   </div>
@@ -181,9 +181,9 @@ export default async function TicketDetailsPage({ params }) {
                 </div>
 
                 <div className="flex flex-col items-center justify-center py-8 text-center">
-                  <p className="text-xs font-semibold uppercase tracking-widest text-slate-400">To</p>
-                  <p className="mt-2 text-2xl font-extrabold text-slate-900">{ticket.to}</p>
-                  <div className="mt-1 flex items-center gap-1 text-slate-400">
+                  <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">To</p>
+                  <p className="mt-2 text-2xl font-extrabold text-foreground">{ticket.to}</p>
+                  <div className="mt-1 flex items-center gap-1 text-muted-foreground">
                     <MapPin className="h-3.5 w-3.5" />
                     <span className="text-xs">Destination</span>
                   </div>
@@ -192,8 +192,8 @@ export default async function TicketDetailsPage({ params }) {
             </div>
 
             {/* Departure countdown */}
-            <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
-              <h2 className="mb-4 text-base font-bold text-slate-900">Departure countdown</h2>
+            <div className="rounded-2xl border border-border bg-card p-6 shadow-sm">
+              <h2 className="mb-4 text-base font-bold text-foreground">Departure countdown</h2>
               <Countdown
                 departureDate={ticket.departureDate || ticket.date}
                 departureTime={ticket.departureTime}
@@ -202,8 +202,8 @@ export default async function TicketDetailsPage({ params }) {
 
             {/* Perks */}
             {ticket.perks?.length > 0 && (
-              <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
-                <h2 className="mb-4 text-base font-bold text-slate-900">What&apos;s included</h2>
+              <div className="rounded-2xl border border-border bg-card p-6 shadow-sm">
+                <h2 className="mb-4 text-base font-bold text-foreground">What&apos;s included</h2>
                 <div className="flex flex-wrap gap-2">
                   {ticket.perks.map((perk) => (
                     <PerkChip key={perk} label={perk} />
@@ -213,11 +213,11 @@ export default async function TicketDetailsPage({ params }) {
             )}
 
             {/* Vendor info */}
-            <div className="rounded-2xl border border-slate-200 bg-white shadow-sm">
-              <div className="border-b border-slate-100 px-6 py-4">
-                <h2 className="text-base font-bold text-slate-900">Operated by</h2>
+            <div className="rounded-2xl border border-border bg-card shadow-sm">
+              <div className="border-b border-border px-6 py-4">
+                <h2 className="text-base font-bold text-foreground">Operated by</h2>
               </div>
-              <div className="divide-y divide-slate-100 px-6">
+              <div className="divide-y divide-border px-6">
                 <InfoRow icon={Building2} label="Operator" value={ticket.vendorName} />
                 <InfoRow icon={Mail}      label="Contact"  value={ticket.vendorEmail} />
                 <InfoRow icon={Tag}       label="Ticket status" value={ticket.status ?? 'Available'} />
@@ -227,15 +227,15 @@ export default async function TicketDetailsPage({ params }) {
             {/* Trust badges */}
             <div className="grid grid-cols-3 gap-3">
               {[
-                { icon: ShieldCheck, label: 'Secure Stripe payment' },
+                { icon: ShieldCheck, label: 'Secure mock payment' },
                 { icon: Zap,         label: 'Instant confirmation'  },
                 { icon: Star,        label: '4.9 avg. rating'       },
               ].map(({ icon: Icon, label }) => (
-                <div key={label} className="flex flex-col items-center gap-2 rounded-2xl border border-slate-200 bg-white p-4 text-center shadow-sm">
-                  <div className="flex h-9 w-9 items-center justify-center rounded-full bg-blue-50">
-                    <Icon className="h-4.5 w-4.5 text-blue-600" />
+                <div key={label} className="flex flex-col items-center gap-2 rounded-2xl border border-border bg-card p-4 text-center shadow-sm">
+                  <div className="flex h-9 w-9 items-center justify-center rounded-full bg-primary/10">
+                    <Icon className="h-4.5 w-4.5 text-primary" />
                   </div>
-                  <p className="text-xs font-semibold leading-tight text-slate-700">{label}</p>
+                  <p className="text-xs font-semibold leading-tight text-foreground">{label}</p>
                 </div>
               ))}
             </div>

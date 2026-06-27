@@ -1,11 +1,13 @@
 "use client";
 
+import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { MapPin, CreditCard } from "lucide-react";
 import { Button, Chip } from "@heroui/react";
 import Countdown from "@/components/shared/Countdown";
-import toast from "react-hot-toast";
+import PaymentModal from "@/components/dashboard/user/PaymentModal";
+import { useSession } from "@/lib/auth-client";
 
 const statusStyles = {
   pending: "bg-yellow-500/10 text-yellow-400 border-yellow-500/20",
@@ -20,6 +22,8 @@ function isDeparturePassed(departureDate, departureTime) {
 }
 
 export default function BookingCard({ booking }) {
+  const { data: session } = useSession();
+  const [paymentOpen, setPaymentOpen] = useState(false);
   const status = booking.bookingStatus || "pending";
   const showCountdown = status !== "rejected";
   const departurePassed = isDeparturePassed(
@@ -29,7 +33,7 @@ export default function BookingCard({ booking }) {
   const canPay = status === "accepted" && !departurePassed;
 
   const handlePayNow = () => {
-    toast("Stripe payment will be enabled in Phase 6.", { icon: "ℹ️" });
+    setPaymentOpen(true);
   };
 
   return (
@@ -119,12 +123,19 @@ export default function BookingCard({ booking }) {
 
           <Link
             href={`/tickets/${booking.ticketId}`}
-            className="text-center text-sm font-medium text-primary hover:text-primary-foreground"
+            className="text-center text-sm font-medium text-primary hover:text-primary/80"
           >
             View ticket details
           </Link>
         </div>
       </div>
+
+      <PaymentModal
+        isOpen={paymentOpen}
+        onClose={() => setPaymentOpen(false)}
+        booking={booking}
+        userEmail={session?.user?.email}
+      />
     </div>
   );
 }

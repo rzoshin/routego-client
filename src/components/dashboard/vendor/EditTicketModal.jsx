@@ -135,7 +135,7 @@ const EditTicketModal = ({ ticket, disabled = false }) => {
 
                   <div className="grid w-full gap-5 md:grid-cols-3">
                     <select
-                      className="rounded-xl border border-white/10 bg-slate-900 p-3 text-white"
+                      className="rounded-xl border border-border bg-background p-3 text-foreground"
                       {...register("transportType")}
                     >
                       {TRANSPORT_TYPES.map((item) => (
@@ -146,7 +146,7 @@ const EditTicketModal = ({ ticket, disabled = false }) => {
                     </select>
 
                     <select
-                      className="rounded-xl border border-white/10 bg-slate-900 p-3 text-white"
+                      className="rounded-xl border border-border bg-background p-3 text-foreground"
                       {...register("from")}
                     >
                       {LOCATIONS.map((item) => (
@@ -157,7 +157,7 @@ const EditTicketModal = ({ ticket, disabled = false }) => {
                     </select>
 
                     <select
-                      className="rounded-xl border border-white/10 bg-slate-900 p-3 text-white"
+                      className="rounded-xl border border-border bg-background p-3 text-foreground"
                       {...register("to")}
                     >
                       {LOCATIONS.map((item) => (
@@ -199,7 +199,7 @@ const EditTicketModal = ({ ticket, disabled = false }) => {
                     {PERKS.map((perk) => (
                       <label
                         key={perk}
-                        className="flex items-center gap-2 text-sm text-slate-300"
+                        className="flex items-center gap-2 text-sm text-muted-foreground"
                       >
                         <input
                           type="checkbox"

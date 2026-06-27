@@ -51,7 +51,7 @@ export default function FilterPanel() {
   };
 
   return (
-    <Card className="relative overflow-hidden bg-slate-950/40 border border-white/10 backdrop-blur-2xl p-8 shadow-2xl rounded-3xl">
+    <Card className="relative overflow-hidden rounded-3xl border border-border bg-card/80 p-8 shadow-2xl backdrop-blur-2xl">
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-6 items-end">
         <div className="flex flex-col gap-2 lg:col-span-2">
           <Label htmlFor="search-title">Search Title</Label>
@@ -71,7 +71,7 @@ export default function FilterPanel() {
             id="filter-from"
             value={from}
             onChange={(e) => setFrom(e.target.value)}
-            className="h-12 rounded-xl border border-white/10 bg-slate-900/60 px-3 text-sm text-white"
+            className="h-12 rounded-xl border border-border bg-background px-3 text-sm text-foreground"
           >
             <option value="">All Locations</option>
             {LOCATIONS.map((loc) => (
@@ -88,7 +88,7 @@ export default function FilterPanel() {
             id="filter-to"
             value={to}
             onChange={(e) => setTo(e.target.value)}
-            className="h-12 rounded-xl border border-white/10 bg-slate-900/60 px-3 text-sm text-white"
+            className="h-12 rounded-xl border border-border bg-background px-3 text-sm text-foreground"
           >
             <option value="">All Locations</option>
             {LOCATIONS.map((loc) => (
@@ -105,7 +105,7 @@ export default function FilterPanel() {
             id="filter-transport"
             value={transportType}
             onChange={(e) => setTransportType(e.target.value)}
-            className="h-12 rounded-xl border border-white/10 bg-slate-900/60 px-3 text-sm text-white"
+            className="h-12 rounded-xl border border-border bg-background px-3 text-sm text-foreground"
           >
             <option value="">All Types</option>
             {TRANSPORT_TYPES.map((type) => (
@@ -122,7 +122,7 @@ export default function FilterPanel() {
             id="filter-sort"
             value={sort}
             onChange={(e) => setSort(e.target.value)}
-            className="h-12 rounded-xl border border-white/10 bg-slate-900/60 px-3 text-sm text-white"
+            className="h-12 rounded-xl border border-border bg-background px-3 text-sm text-foreground"
           >
             <option value="">Default</option>
             <option value="price_asc">Low to High</option>
@@ -141,7 +141,7 @@ export default function FilterPanel() {
           <Button
             onClick={handleReset}
             variant="bordered"
-            className="border-white/10 text-white h-12 px-4"
+            className="h-12 border-border px-4 text-foreground"
             title="Reset Filters"
           >
             <FaHistory size={13} />

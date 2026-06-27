@@ -119,16 +119,16 @@ export function Navbar() {
                 </button>
 
                 {dropdownOpen && (
-                  <div className="absolute right-0 mt-3 w-56 bg-slate-900/95 border border-white/10 rounded-2xl shadow-2xl backdrop-blur-xl py-2 z-55 animate-in fade-in slide-in-from-top-2 duration-200">
+                  <div className="absolute right-0 z-55 mt-3 w-56 animate-in rounded-2xl border border-border bg-card py-2 shadow-2xl backdrop-blur-xl fade-in slide-in-from-top-2 duration-200">
                     {/* User info */}
-                    <div className="px-4 py-2.5 border-b border-white/5 mb-1.5 cursor-default">
-                      <p className="text-[10px] text-pink-400 font-bold uppercase tracking-wider">
+                    <div className="mb-1.5 cursor-default border-b border-border px-4 py-2.5">
+                      <p className="text-[10px] font-bold uppercase tracking-wider text-primary">
                         {session.user.role} Account
                       </p>
-                      <p className="font-bold text-white text-sm mt-0.5">
+                      <p className="mt-0.5 text-sm font-bold text-foreground">
                         {session.user.name}
                       </p>
-                      <p className="text-[11px] text-slate-400 truncate mt-0.5">
+                      <p className="mt-0.5 truncate text-[11px] text-muted-foreground">
                         {session.user.email}
                       </p>
                     </div>
@@ -137,22 +137,22 @@ export function Navbar() {
                     <Link
                       href={`/dashboard/${session.user.role}`}
                       onClick={() => setDropdownOpen(false)}
-                      className="w-full flex items-center gap-2.5 px-4 py-2.5 text-left text-xs font-semibold text-slate-300 hover:text-white hover:bg-white/5 transition cursor-pointer"
+                      className="flex w-full cursor-pointer items-center gap-2.5 px-4 py-2.5 text-left text-xs font-semibold text-muted-foreground transition hover:bg-secondary hover:text-foreground"
                     >
-                      <FaThLarge className="text-slate-400 text-sm shrink-0" />
+                      <FaThLarge className="shrink-0 text-sm text-muted-foreground" />
                       <span>My Dashboard</span>
                     </Link>
 
                     <Link
                       href={`/dashboard/${session.user.role}`}
                       onClick={() => setDropdownOpen(false)}
-                      className="w-full flex items-center gap-2.5 px-4 py-2.5 text-left text-xs font-semibold text-slate-300 hover:text-white hover:bg-white/5 transition cursor-pointer"
+                      className="flex w-full cursor-pointer items-center gap-2.5 px-4 py-2.5 text-left text-xs font-semibold text-muted-foreground transition hover:bg-secondary hover:text-foreground"
                     >
-                      <FaUser className="text-slate-400 text-sm shrink-0" />
+                      <FaUser className="shrink-0 text-sm text-muted-foreground" />
                       <span>Profile Settings</span>
                     </Link>
 
-                    <div className="border-t border-white/5 my-1.5" />
+                    <div className="my-1.5 border-t border-border" />
 
                     <button
                       onClick={handleLogout}

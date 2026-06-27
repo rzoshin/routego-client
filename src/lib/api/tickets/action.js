@@ -20,3 +20,25 @@ export const deleteTicket = async (id) => {
   revalidatePath("/dashboard/vendor/added-tickets");
   return resData;
 };
+
+export const updateTicketVerification = async (id, status) => {
+  const resData = await serverMutation(
+    { status },
+    `/api/tickets/${id}/verification`,
+    "PATCH"
+  );
+  revalidatePath("/dashboard/admin/tickets");
+  revalidatePath("/dashboard/admin/advertise-tickets");
+  return resData;
+};
+
+export const updateTicketAdvertise = async (id, isAdvertised) => {
+  const resData = await serverMutation(
+    { isAdvertised },
+    `/api/tickets/${id}/advertise`,
+    "PATCH"
+  );
+  revalidatePath("/dashboard/admin/advertise-tickets");
+  revalidatePath("/");
+  return resData;
+};

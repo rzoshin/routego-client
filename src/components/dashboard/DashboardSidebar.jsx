@@ -1,15 +1,42 @@
+"use client";
+
 import Logo from "@/components/ui/Logo";
-import { useSession } from "@/lib/auth-client";
+import { authClient, useSession } from "@/lib/auth-client";
 import Image from "next/image";
 import Link from "next/link";
-import { FaBuilding, FaCalendarAlt, FaHistory, FaHome, FaPlus, FaSignOutAlt, FaTicketAlt, FaUserCircle, FaUsers, FaUserShield } from "react-icons/fa";
+import { useRouter } from "next/navigation";
+import {
+  FaCalendarAlt,
+  FaHistory,
+  FaHome,
+  FaPlus,
+  FaSignOutAlt,
+  FaTicketAlt,
+  FaUserCircle,
+  FaUsers,
+  FaUserShield,
+} from "react-icons/fa";
 
+const roleBadgeStyles = {
+  admin: "text-primary",
+  vendor: "text-accent",
+  user: "text-muted-foreground",
+};
 
 const DashboardSideBar = () => {
+  const router = useRouter();
   const { data: session } = useSession();
-  const handleLogout = () => {
 
-  }
+  const handleLogout = async () => {
+    await authClient.signOut({
+      fetchOptions: {
+        onSuccess: () => {
+          router.push("/login");
+          router.refresh();
+        },
+      },
+    });
+  };
 
   const vendorMenu = [
     { key: "profile", label: "My Profile", icon: FaUsers, href: "/dashboard/vendor" },
@@ -17,99 +44,91 @@ const DashboardSideBar = () => {
     { key: "my-tickets", label: "My Added Tickets", icon: FaCalendarAlt, href: "/dashboard/vendor/added-tickets" },
     { key: "bookings", label: "Requested Bookings", icon: FaUsers, href: "/dashboard/vendor/bookings" },
     { key: "revenues", label: "Revenue Overview", icon: FaHistory, href: "/dashboard/vendor/revenues" },
-  ]
+  ];
 
   const userMenu = [
     { key: "profile", label: "My Profile", icon: FaUserCircle, href: "/dashboard/user" },
     { key: "tickets", label: "My Booked Tickets", icon: FaTicketAlt, href: "/dashboard/user/tickets" },
     { key: "transactions", label: "Transactions", icon: FaHistory, href: "/dashboard/user/transactions" },
-  ]
+  ];
 
   const adminMenu = [
     { key: "profile", label: "My Profile", icon: FaUserShield, href: "/dashboard/admin" },
     { key: "manage-tickets", label: "Manage Tickets", icon: FaCalendarAlt, href: "/dashboard/admin/tickets" },
     { key: "manage-users", label: "Manage Users", icon: FaUsers, href: "/dashboard/admin/users" },
     { key: "advertise-tickets", label: "Advertise Tickets", icon: FaHistory, href: "/dashboard/admin/advertise-tickets" },
-  ]
+  ];
 
   const role = session?.user?.role;
+  const menuItems =
+    role === "vendor" ? vendorMenu : role === "user" ? userMenu : role === "admin" ? adminMenu : null;
 
-  const menuItems = role === "vendor" ? vendorMenu : role === "user" ? userMenu : role === "admin" ? adminMenu : null;
+  const navLinkClass =
+    "flex w-full cursor-pointer items-center gap-3 rounded-xl px-3 py-2.5 text-left text-sm font-semibold text-muted-foreground transition-all duration-150 hover:bg-sidebar-accent/15 hover:text-sidebar-foreground";
 
   return (
-    <aside className="w-64 h-screen border-r border-white/5">
-      <div className="h-full flex flex-col bg-blue-300/50 backdrop-blur-xl">
-        {/* Brand / Logo */}
-        <div className="px-6 py-5 border-b border-white/5 flex items-center gap-2">
+    <aside className="h-screen w-64 shrink-0 border-r border-sidebar-border bg-sidebar text-sidebar-foreground">
+      <div className="flex h-full flex-col">
+        <div className="flex items-center gap-2 border-b border-sidebar-border px-6 py-5">
           <Logo />
-          <span className="tracking-tight text-blue-500 font-bold text-lg">
-              RouteGo
-          </span>
+          <span className="text-lg font-bold tracking-tight text-primary">RouteGo</span>
         </div>
 
-        {/* User Profile */}
-        <div className="px-6 py-5 border-b border-white/5">
+        <div className="border-b border-sidebar-border px-6 py-5">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-full overflow-hidden border-2 border-pink-500/60 shrink-0">
+            <div className="h-10 w-10 shrink-0 overflow-hidden rounded-full border-2 border-primary/40">
               <Image
                 width={40}
                 height={40}
-                src={session?.user?.image || `https://ui-avatars.com/api/?name=${encodeURIComponent("Jane Doe")}&background=7c3aed&color=fff&bold=true`}
+                src={
+                  session?.user?.image ||
+                  `https://ui-avatars.com/api/?name=${encodeURIComponent(session?.user?.name || "User")}&background=2563eb&color=fff&bold=true`
+                }
                 alt="Avatar"
-                className="object-cover w-full h-full"
+                className="h-full w-full object-cover"
+                unoptimized
               />
             </div>
             <div className="overflow-hidden">
-              <p className="text-white text-sm font-bold truncate leading-tight">
+              <p className="truncate text-sm font-bold leading-tight text-sidebar-foreground">
                 {session?.user?.name}
               </p>
-              <span className={`text-[10px] font-bold uppercase tracking-wider ${role === "admin" ? "text-yellow-400" : role === "organizer" ? "text-indigo-400" : "text-pink-400"}`}>
+              <span
+                className={`text-[10px] font-bold uppercase tracking-wider ${roleBadgeStyles[role] || roleBadgeStyles.user}`}
+              >
                 {role}
               </span>
             </div>
           </div>
         </div>
 
-        {/* Navigation Menu */}
-        <nav className="grow overflow-y-auto px-3 py-4 space-y-1">
-          <p className="text-[10px] text-slate-600 font-bold uppercase tracking-widest px-3 pb-2">Navigation</p>
-          {
-            menuItems?.map(({ key, label, icon: Icon, href }) => {
-
-              return (
-                <Link
-                  key={key}
-                  href={href}
-                  className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-semibold transition-all duration-150 text-left cursor-pointer text-slate-400 hover:text-white hover:bg-white/5"
-                            `}
-                >
-                  <span className={`w-8 h-8 rounded-lg flex items-center justify-center shrink-0 transition-colors bg-white/5 text-slate-400`}>
-                    <Icon size={20} />
-                  </span>
-                  <span>{label}</span>
-
-
-                  {/* {isActive && <span className="ml-auto w-1.5 h-1.5 rounded-full bg-pink-400" />} */}
-                </Link>
-              )
-            })
-          }
-
+        <nav className="grow space-y-1 overflow-y-auto px-3 py-4">
+          <p className="px-3 pb-2 text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
+            Navigation
+          </p>
+          {menuItems?.map(({ key, label, icon: Icon, href }) => (
+            <Link key={key} href={href} className={navLinkClass}>
+              <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-secondary text-muted-foreground">
+                <Icon size={20} />
+              </span>
+              <span>{label}</span>
+            </Link>
+          ))}
         </nav>
 
-        {/* Bottom Links */}
-        <div className="px-3 py-4 border-t border-white/5 space-y-1">
-          <Link href="/" className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-semibold text-slate-400 hover:text-white hover:bg-white/5 transition-all duration-150">
-            <span className="w-8 h-8 rounded-lg bg-white/5 flex items-center justify-center shrink-0">
+        <div className="space-y-1 border-t border-sidebar-border px-3 py-4">
+          <Link href="/" className={navLinkClass}>
+            <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-secondary">
               <FaHome size={13} />
             </span>
             Back to Site
           </Link>
           <button
+            type="button"
             onClick={handleLogout}
-            className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-semibold text-slate-400 hover:text-red-400 hover:bg-red-500/5 transition-all duration-150 cursor-pointer"
+            className="flex w-full cursor-pointer items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-semibold text-muted-foreground transition-all duration-150 hover:bg-destructive/10 hover:text-destructive"
           >
-            <span className="w-8 h-8 rounded-lg bg-white/5 flex items-center justify-center shrink-0">
+            <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-secondary">
               <FaSignOutAlt size={13} />
             </span>
             Sign Out
