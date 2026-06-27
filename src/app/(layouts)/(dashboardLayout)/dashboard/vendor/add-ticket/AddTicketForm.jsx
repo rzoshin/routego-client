@@ -231,7 +231,7 @@ export default function AddTicketForm({ isFraud = false }) {
                   <Input
                     type="time"
                     isDisabled={isFraud}
-                    className="w-full border-border/5 bg-background/40 p-3"
+                    className="w-full border-white/10 bg-slate-900/50 p-3"
                     {...register("departureTime", {
                       required: "Departure time is required",
                     })}
@@ -244,7 +244,7 @@ export default function AddTicketForm({ isFraud = false }) {
                     type="number"
                     isDisabled={isFraud}
                     placeholder="0"
-                    className="w-full border-border/5 bg-background/40 p-3"
+                    className="w-full border-white/10 bg-slate-900/50 p-3"
                     {...register("price", {
                       required: "Price is required",
                       valueAsNumber: true,
@@ -259,7 +259,7 @@ export default function AddTicketForm({ isFraud = false }) {
                     type="number"
                     isDisabled={isFraud}
                     placeholder="100"
-                    className="w-full border-border/5 bg-background/40 p-3"
+                    className="w-full border-white/10 bg-slate-900/50 p-3"
                     {...register("quantity", {
                       required: "Quantity is required",
                       valueAsNumber: true,
@@ -271,7 +271,7 @@ export default function AddTicketForm({ isFraud = false }) {
 
               <div className="grid grid-cols-2 gap-3 md:grid-cols-3">
                 {PERKS.map((perk) => (
-                  <label key={perk} className="flex items-center gap-2 text-sm text-muted-foreground">
+                  <label key={perk} className="flex items-center gap-2 text-sm text-slate-300">
                     <input
                       type="checkbox"
                       value={perk}
@@ -302,7 +302,7 @@ export default function AddTicketForm({ isFraud = false }) {
                 type="submit"
                 isDisabled={isFraud}
                 isLoading={isSubmitting}
-                className="h-11 bg-gradient-to-r from-primary to-primary/80 px-6 font-bold text-primary-foreground shadow-lg shadow-primary/10"
+                className="h-11 bg-gradient-to-r from-pink-500 to-indigo-600 px-6 font-bold text-white shadow-lg shadow-pink-500/10"
                 radius="lg"
               >
                 Add Ticket
