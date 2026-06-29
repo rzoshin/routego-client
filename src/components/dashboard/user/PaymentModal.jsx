@@ -16,29 +16,24 @@ export default function PaymentModal({ isOpen, onClose, booking, userEmail }) {
   const [cvc, setCvc] = useState("123");
   const [loading, setLoading] = useState(false);
 
-  const handlePay = async () => {
-    const digits = cardNumber.replace(/\s/g, "");
-    if (digits !== TEST_CARD) {
-      toast.error("Use test card 4242 4242 4242 4242");
-      return;
+  const handlePay =  () => {
+    const purchase = async () => {
+      const res = fetch("/api/checkout_sessions", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        }
+      });
+    
+    const data = await res.json();
+    if(data?.url) {
+      window.location.href = data.url;
     }
-
-    try {
-      setLoading(true);
-      const result = await completePayment(booking._id, userEmail);
-
-      if (result?.success) {
-        toast.success("Payment successful!");
-        onClose();
-        router.refresh();
-      } else {
-        toast.error(result?.message || "Payment failed");
-      }
-    } catch (error) {
-      toast.error(error.message || "Payment failed");
-    } finally {
-      setLoading(false);
-    }
+  };
+  try {
+    purchase();
+  } catch (error) {
+    toast.error(error.message || "Payment failed");
   };
 
   return (
@@ -110,4 +105,5 @@ export default function PaymentModal({ isOpen, onClose, booking, userEmail }) {
       </Modal.Backdrop>
     </Modal>
   );
+}
 }

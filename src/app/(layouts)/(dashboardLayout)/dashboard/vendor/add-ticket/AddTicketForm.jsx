@@ -230,7 +230,6 @@ export default function AddTicketForm({ isFraud = false }) {
                   <Label htmlFor="departureTime">Departure Time</Label>
                   <Input
                     type="time"
-                    isDisabled={isFraud}
                     className="w-full border-white/10 bg-slate-900/50 p-3"
                     {...register("departureTime", {
                       required: "Departure time is required",

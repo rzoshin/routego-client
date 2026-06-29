@@ -1,5 +1,3 @@
-"use client";
-
 import DeleteTicketModal from "@/components/dashboard/vendor/DeleteTicketModal";
 import EditTicketModal from "@/components/dashboard/vendor/EditTicketModal";
 import { Card, Chip } from "@heroui/react";

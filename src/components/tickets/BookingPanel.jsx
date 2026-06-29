@@ -10,6 +10,7 @@ import { Input, Modal, Button } from "@heroui/react";
 import { addBooking } from "@/lib/api/bookings/action";
 import { useSession } from "@/lib/auth-client";
 import toast from "react-hot-toast";
+import { isDeparturePassed } from "@/lib/parseDepartureDateTime";
 
 export default function BookingPanel({ ticket }) {
   const router = useRouter();
@@ -24,14 +25,11 @@ export default function BookingPanel({ ticket }) {
   const total = price * qty;
   const currency = "BDT"; // change to '$' if you prefer
 
-  const departureDateTime = new Date(
-    `${ticket.departureDate} ${ticket.departureTime}`,
-  );
-
-
-
   const isSoldOut = availableSeats <= 0;
-  const isExpired = departureDateTime < new Date();
+  const isExpired = isDeparturePassed(
+    ticket.departureDate || ticket.date,
+    ticket.departureTime,
+  );
 
   const handleOpenBooking = () => {
     if (!session?.user) {

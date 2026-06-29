@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { parseDepartureDateTime } from "@/lib/parseDepartureDateTime";
 
 function getTimeLeft(targetDate) {
   const difference = targetDate.getTime() - Date.now();
@@ -19,16 +20,18 @@ function getTimeLeft(targetDate) {
 
 export default function Countdown({ departureDate, departureTime, className = "" }) {
   const [timeLeft, setTimeLeft] = useState(null);
+  const [isInvalid, setIsInvalid] = useState(false);
 
   useEffect(() => {
-    const dateValue = departureDate || "";
-    const timeValue = departureTime || "00:00";
-    const targetDate = new Date(`${dateValue} ${timeValue}`);
+    const targetDate = parseDepartureDateTime(departureDate, departureTime);
 
-    if (Number.isNaN(targetDate.getTime())) {
+    if (!targetDate) {
+      setIsInvalid(true);
       setTimeLeft(null);
       return;
     }
+
+    setIsInvalid(false);
 
     const update = () => setTimeLeft(getTimeLeft(targetDate));
     update();
@@ -36,6 +39,14 @@ export default function Countdown({ departureDate, departureTime, className = ""
     const interval = setInterval(update, 1000);
     return () => clearInterval(interval);
   }, [departureDate, departureTime]);
+
+  if (isInvalid) {
+    return (
+      <p className={`text-sm font-medium text-muted-foreground ${className}`}>
+        Departure schedule unavailable
+      </p>
+    );
+  }
 
   if (!timeLeft) {
     return (

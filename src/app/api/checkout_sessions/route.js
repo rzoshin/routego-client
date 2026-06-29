@@ -20,7 +20,7 @@ export async function POST() {
       mode: 'payment',
       success_url: `${origin}/success?session_id={CHECKOUT_SESSION_ID}`,
     });
-    return NextResponse.redirect(session.url, 303)
+    return NextResponse.json({url: session.url})
   } catch (err) {
     return NextResponse.json(
       { error: err.message },

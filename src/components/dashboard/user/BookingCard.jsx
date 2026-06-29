@@ -8,6 +8,7 @@ import { Button, Chip } from "@heroui/react";
 import Countdown from "@/components/shared/Countdown";
 import PaymentModal from "@/components/dashboard/user/PaymentModal";
 import { useSession } from "@/lib/auth-client";
+import { isDeparturePassed } from "@/lib/parseDepartureDateTime";
 
 const statusStyles = {
   pending: "bg-yellow-500/10 text-yellow-400 border-yellow-500/20",
@@ -15,11 +16,6 @@ const statusStyles = {
   rejected: "bg-red-500/10 text-red-400 border-red-500/20",
   paid: "bg-green-500/10 text-green-400 border-green-500/20",
 };
-
-function isDeparturePassed(departureDate, departureTime) {
-  const target = new Date(`${departureDate || ""} ${departureTime || "00:00"}`);
-  return !Number.isNaN(target.getTime()) && target < new Date();
-}
 
 export default function BookingCard({ booking }) {
   const { data: session } = useSession();

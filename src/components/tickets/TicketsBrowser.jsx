@@ -1,5 +1,4 @@
 import { Suspense } from "react";
-import { Spinner } from "@heroui/react";
 import { fetchTickets } from "@/lib/api/tickets/data";
 import TicketCard from "./TicketCard";
 import TicketsPagination from "./TicketsPagination";
@@ -46,9 +45,9 @@ export default async function TicketsBrowser({ searchParams }) {
         </div>
       )}
 
-      <Suspense fallback={<Spinner />}>
+      <Suspense fallback= "Loading...">
         <TicketsPagination totalPages={totalPages} currentPage={currentPage} />
       </Suspense>
     </div>
-  );
+  )
 }
