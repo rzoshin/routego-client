@@ -1,4 +1,4 @@
-import { serverFetch } from "../server";
+import { authenticatedFetch, serverFetch } from "../server";
 
 function normalizeTicketList(result) {
   if (!Array.isArray(result)) return [];
@@ -10,7 +10,7 @@ function normalizeTicketList(result) {
 }
 
 export const myTickets = async (email) => {
-  const result = await serverFetch(`/api/tickets/vendor/${email}`);
+  const result = await authenticatedFetch(`/api/tickets/vendor/${email}`);
   return normalizeTicketList(result);
 };
 
@@ -30,11 +30,11 @@ export const fetchLatestTickets = async () => {
 };
 
 export const fetchAdminTickets = async () => {
-  const result = await serverFetch(`/api/tickets/admin/all`);
+  const result = await authenticatedFetch(`/api/tickets/admin/all`);
   return result;
 };
 
 export const fetchApprovedTickets = async () => {
-  const result = await serverFetch(`/api/tickets/admin/approved`);
+  const result = await authenticatedFetch(`/api/tickets/admin/approved`);
   return result;
 };

@@ -1,7 +1,10 @@
 import { NextResponse } from "next/server";
 import { revalidatePath } from "next/cache";
+import { headers } from "next/headers";
 import { stripe } from "@/lib/stripe";
 import { baseURL } from "@/lib/api/baseUrl";
+import { auth } from "@/lib/auth";
+import { getAuthHeaders } from "@/lib/api/authHeaders";
 
 export async function POST(request) {
   try {
@@ -10,6 +13,13 @@ export async function POST(request) {
         { error: "Stripe is not configured" },
         { status: 500 }
       );
+    }
+
+    const requestHeaders = await headers();
+    const session = await auth.api.getSession({ headers: requestHeaders });
+
+    if (!session?.user?.email) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
     const { sessionId } = await request.json();
@@ -21,17 +31,17 @@ export async function POST(request) {
       );
     }
 
-    const session = await stripe.checkout.sessions.retrieve(sessionId);
+    const checkoutSession = await stripe.checkout.sessions.retrieve(sessionId);
 
-    if (session.payment_status !== "paid") {
+    if (checkoutSession.payment_status !== "paid") {
       return NextResponse.json(
         { error: "Payment was not completed" },
         { status: 400 }
       );
     }
 
-    const bookingId = session.metadata?.bookingId;
-    const userEmail = session.metadata?.userEmail;
+    const bookingId = checkoutSession.metadata?.bookingId;
+    const userEmail = checkoutSession.metadata?.userEmail;
 
     if (!bookingId || !userEmail) {
       return NextResponse.json(
@@ -40,14 +50,19 @@ export async function POST(request) {
       );
     }
 
-    const transactionId =
-      typeof session.payment_intent === "string"
-        ? session.payment_intent
-        : session.payment_intent?.id || session.id;
+    if (userEmail !== session.user.email) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 403 });
+    }
 
+    const transactionId =
+      typeof checkoutSession.payment_intent === "string"
+        ? checkoutSession.payment_intent
+        : checkoutSession.payment_intent?.id || checkoutSession.id;
+
+    const authHeaders = await getAuthHeaders();
     const res = await fetch(`${baseURL}/api/payments/complete`, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: authHeaders,
       body: JSON.stringify({
         bookingId,
         userEmail,

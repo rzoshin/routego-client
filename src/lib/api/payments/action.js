@@ -1,10 +1,10 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { serverMutation } from "../server";
+import { authenticatedMutation } from "../server";
 
 export const completePayment = async (bookingId, userEmail) => {
-  const resData = await serverMutation(
+  const resData = await authenticatedMutation(
     { bookingId, userEmail },
     "/api/payments/complete",
     "POST"

@@ -1,15 +1,15 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { serverMutation } from "../server";
+import { authenticatedMutation } from "../server";
 
 export const addBooking = async (bookingData) => {
-  const resData = await serverMutation(bookingData, "/api/bookings", "POST");
+  const resData = await authenticatedMutation(bookingData, "/api/bookings", "POST");
   return resData;
 };
 
 export const updateBookingStatus = async (bookingId, status) => {
-  const resData = await serverMutation(
+  const resData = await authenticatedMutation(
     { status },
     `/api/bookings/${bookingId}/status`,
     "PATCH"

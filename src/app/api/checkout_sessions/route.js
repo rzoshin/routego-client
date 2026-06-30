@@ -3,10 +3,13 @@ import { headers } from "next/headers";
 import { stripe } from "@/lib/stripe";
 import { baseURL } from "@/lib/api/baseUrl";
 import { isDeparturePassed } from "@/lib/parseDepartureDateTime";
+import { auth } from "@/lib/auth";
+import { getAuthHeaders } from "@/lib/api/authHeaders";
 
-async function fetchBooking(bookingId) {
+async function fetchBooking(bookingId, authHeaders) {
   const res = await fetch(`${baseURL}/api/bookings/id/${bookingId}`, {
     cache: "no-store",
+    headers: authHeaders,
   });
   if (!res.ok) return null;
   return res.json();
@@ -21,6 +24,13 @@ export async function POST(request) {
       );
     }
 
+    const requestHeaders = await headers();
+    const session = await auth.api.getSession({ headers: requestHeaders });
+
+    if (!session?.user?.email) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
     const body = await request.json();
     const bookingId = String(body?.bookingId || "");
     const userEmail = String(body?.userEmail || "");
@@ -32,7 +42,12 @@ export async function POST(request) {
       );
     }
 
-    const booking = await fetchBooking(bookingId);
+    if (userEmail !== session.user.email) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 403 });
+    }
+
+    const authHeaders = await getAuthHeaders();
+    const booking = await fetchBooking(bookingId, authHeaders);
 
     if (!booking?._id) {
       return NextResponse.json({ error: "Booking not found" }, { status: 404 });
@@ -71,10 +86,12 @@ export async function POST(request) {
       return NextResponse.json({ error: "Invalid booking amount" }, { status: 400 });
     }
 
-    const headersList = await headers();
-    const origin = headersList.get("origin") || process.env.NEXT_PUBLIC_BETTER_AUTH_URL || "http://localhost:3000";
+    const origin =
+      requestHeaders.get("origin") ||
+      process.env.NEXT_PUBLIC_BETTER_AUTH_URL ||
+      "http://localhost:3000";
 
-    const session = await stripe.checkout.sessions.create({
+    const checkoutSession = await stripe.checkout.sessions.create({
       mode: "payment",
       customer_email: userEmail,
       line_items: [
@@ -98,7 +115,7 @@ export async function POST(request) {
       cancel_url: `${origin}/dashboard/user/tickets`,
     });
 
-    return NextResponse.json({ url: session.url });
+    return NextResponse.json({ url: checkoutSession.url });
   } catch (err) {
     return NextResponse.json(
       { error: err.message || "Failed to create checkout session" },
