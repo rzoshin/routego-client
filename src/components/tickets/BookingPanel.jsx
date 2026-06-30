@@ -220,7 +220,7 @@ export default function BookingPanel({ ticket }) {
           </Modal.Backdrop>
         </Modal>
         <p className="mt-3 text-center text-xs text-muted-foreground">
-          Secure mock payment · Instant e-ticket
+          Secure Stripe payment · Instant e-ticket
         </p>
       </div>
     </div>

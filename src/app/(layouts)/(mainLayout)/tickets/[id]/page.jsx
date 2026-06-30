@@ -227,7 +227,7 @@ export default async function TicketDetailsPage({ params }) {
             {/* Trust badges */}
             <div className="grid grid-cols-3 gap-3">
               {[
-                { icon: ShieldCheck, label: 'Secure mock payment' },
+                { icon: ShieldCheck, label: 'Secure Stripe payment' },
                 { icon: Zap,         label: 'Instant confirmation'  },
                 { icon: Star,        label: '4.9 avg. rating'       },
               ].map(({ icon: Icon, label }) => (

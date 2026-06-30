@@ -3,12 +3,13 @@
 import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { MapPin, CreditCard } from "lucide-react";
+import { MapPin, CreditCard, CheckCircle2 } from "lucide-react";
 import { Button, Chip } from "@heroui/react";
 import Countdown from "@/components/shared/Countdown";
 import PaymentModal from "@/components/dashboard/user/PaymentModal";
 import { useSession } from "@/lib/auth-client";
 import { isDeparturePassed } from "@/lib/parseDepartureDateTime";
+import { formatDateDMY } from "@/lib/formatDate";
 
 const statusStyles = {
   pending: "bg-yellow-500/10 text-yellow-400 border-yellow-500/20",
@@ -21,16 +22,15 @@ export default function BookingCard({ booking }) {
   const { data: session } = useSession();
   const [paymentOpen, setPaymentOpen] = useState(false);
   const status = booking.bookingStatus || "pending";
-  const showCountdown = status !== "rejected";
+  const isPaid = status === "paid";
+  const isAccepted = status === "accepted";
+  const isRejected = status === "rejected";
+  const showCountdown = !isRejected;
   const departurePassed = isDeparturePassed(
     booking.departureDate,
     booking.departureTime
   );
-  const canPay = status === "accepted" && !departurePassed;
-
-  const handlePayNow = () => {
-    setPaymentOpen(true);
-  };
+  const canPay = isAccepted && !departurePassed;
 
   return (
     <div className="flex flex-col overflow-hidden rounded-2xl border border-border/5 bg-card backdrop-blur-xl shadow-2xl">
@@ -80,15 +80,11 @@ export default function BookingCard({ booking }) {
           </div>
           <div>
             <p>Booked on</p>
-            <p className="font-semibold">
-              {booking.createdAt
-                ? new Date(booking.createdAt).toLocaleDateString()
-                : "-"}
-            </p>
+            <p className="font-semibold">{formatDateDMY(booking.createdAt)}</p>
           </div>
         </div>
 
-        {showCountdown && (
+        {showCountdown ? (
           <div>
             <p className="mb-2 text-xs font-semibold uppercase tracking-wider">
               Departure countdown
@@ -98,24 +94,40 @@ export default function BookingCard({ booking }) {
               departureTime={booking.departureTime}
             />
           </div>
-        )}
+        ) : null}
 
         <div className="mt-auto flex flex-col gap-2 pt-2">
-          {canPay && (
+          {isPaid ? (
             <Button
-              onClick={handlePayNow}
-              className="w-full bg-primary text-primary-foreground font-semibold"
-              startContent={<CreditCard className="h-4 w-4" />}
+              isDisabled
+              className="w-full border border-green-500/30 bg-green-500/20 font-semibold text-green-400"
+              startContent={<CheckCircle2 className="h-4 w-4" />}
             >
-              Pay Now
+              Paid
             </Button>
-          )}
+          ) : null}
 
-          {status === "accepted" && departurePassed && (
-            <p className="text-center text-xs text-destructive">
-              Payment unavailable — departure time has passed.
-            </p>
-          )}
+          {isAccepted ? (
+            <>
+              <Button
+                isDisabled={!canPay}
+                onPress={() => canPay && setPaymentOpen(true)}
+                className={`w-full font-semibold ${
+                  canPay
+                    ? "bg-primary text-primary-foreground"
+                    : "border border-border bg-muted text-muted-foreground"
+                }`}
+                startContent={<CreditCard className="h-4 w-4" />}
+              >
+                Pay Now
+              </Button>
+              {departurePassed ? (
+                <p className="text-center text-xs text-destructive">
+                  Payment unavailable — departure time has passed.
+                </p>
+              ) : null}
+            </>
+          ) : null}
 
           <Link
             href={`/tickets/${booking.ticketId}`}
