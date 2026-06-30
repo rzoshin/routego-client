@@ -1,9 +1,11 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+import { syncUser } from "../users/action";
 import { deleteMutation, serverMutation } from "../server";
 
 export const addTicket = async (ticketData) => {
+  await syncUser();
   const resData = await serverMutation(ticketData, "/api/tickets", "POST");
   revalidatePath("/dashboard/vendor/added-tickets");
   return resData;

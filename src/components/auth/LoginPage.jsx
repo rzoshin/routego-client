@@ -21,6 +21,7 @@ import { authClient } from "@/lib/auth-client";
 
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
+import { syncUser } from "@/lib/api/users/action";
 
 const LoginPage = () => {
   const router = useRouter();
@@ -42,7 +43,7 @@ const LoginPage = () => {
         toast.error(signInError.message || "Login failed.");
         return;
       }
-      // 2. Only run these if the signup was completely successful
+      await syncUser();
       toast.success("Logged in successfully!");
       router.push("/");
 

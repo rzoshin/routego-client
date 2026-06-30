@@ -61,9 +61,23 @@ export default function AddTicketForm({ isFraud = false }) {
       return;
     }
 
+    if (!session?.user?.email) {
+      toast.error("You must be logged in to add a ticket");
+      return;
+    }
+
     try {
-      const imageFile = data.image[0];
+      const imageFile = data.image?.[0];
+      if (!imageFile) {
+        toast.error("Please select an image");
+        return;
+      }
+
       const imageUrl = await uploadImage(imageFile);
+      if (!imageUrl) {
+        toast.error("Image upload failed. Check your ImgBB API key in .env.local");
+        return;
+      }
 
       const ticketData = {
         title: data.title,
@@ -86,7 +100,7 @@ export default function AddTicketForm({ isFraud = false }) {
 
       const result = await addTicket(ticketData);
 
-      if (result.insertedId) {
+      if (result?.insertedId) {
         toast.success("Ticket submitted for verification");
         router.push("/dashboard/vendor/added-tickets");
         router.refresh();
@@ -94,7 +108,7 @@ export default function AddTicketForm({ isFraud = false }) {
         toast.error(result?.message || "Failed to create ticket");
       }
     } catch (error) {
-      toast.error(error.message);
+      toast.error(error.message || "Something went wrong");
     }
   };
 

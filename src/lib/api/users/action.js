@@ -1,11 +1,24 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+import { getUser } from "@/lib/api/session";
 import { serverMutation } from "../server";
 
 export const createUser = async (userData) => {
   const resData = await serverMutation(userData, "/api/users", "POST");
   return resData;
+};
+
+export const syncUser = async () => {
+  const user = await getUser();
+  if (!user?.email) return null;
+
+  return createUser({
+    email: user.email,
+    name: user.name,
+    role: user.role,
+    image: user.image ?? null,
+  });
 };
 
 export const updateUserRole = async (id, role) => {

@@ -6,10 +6,21 @@ import { Spinner } from "@heroui/react";
 import VendorManageTickets from "./VendorManageTickets";
 import DashboardHeading from "@/components/dashboard/DashboardHeading";
 import { useSession } from "@/lib/auth-client";
-
-const VendorTickets = async () => {
+import { useEffect } from "react";
+import { useState } from "react";
+const VendorTickets = () => {
+    const [tickets, setTickets] = useState([]);
     const { data: session } = useSession();
-    const tickets = await myTickets(session?.user?.email);
+
+    useEffect(() => {
+        if (!session?.user?.email) return;
+
+        const fetchTickets = async () => {
+            const tickets = await myTickets(session.user.email);
+            setTickets(Array.isArray(tickets) ? tickets : []);
+        };
+        fetchTickets();
+    }, [session?.user?.email]);
 
     return (
         <div>
