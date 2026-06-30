@@ -2,7 +2,12 @@
 
 import { revalidatePath } from "next/cache";
 import { syncUser } from "../users/action";
-import { authenticatedDelete, authenticatedMutation } from "../server";
+import { authenticatedDelete, authenticatedMutation } from "../authenticatedServer";
+import { myTickets } from "./data";
+
+export const getMyTickets = async (email) => {
+  return myTickets(email);
+};
 
 export const addTicket = async (ticketData) => {
   await syncUser();

@@ -9,7 +9,7 @@ import { Toaster } from "react-hot-toast";
 import {
   fetchFeaturedTickets,
   fetchLatestTickets,
-} from "@/lib/api/tickets/data";
+} from "@/lib/api/tickets/publicData";
 
 export const dynamic = "force-dynamic";
 

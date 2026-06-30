@@ -1,4 +1,6 @@
-import { authenticatedFetch } from "../server";
+import "server-only";
+
+import { authenticatedFetch } from "../authenticatedServer";
 
 export const fetchMyBooking = async (email) => {
   const result = await authenticatedFetch(`/api/bookings/${encodeURIComponent(email)}`);

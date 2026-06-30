@@ -1,6 +1,6 @@
 "use client";
 
-import { myTickets } from "@/lib/api/tickets/data";
+import { getMyTickets } from "@/lib/api/tickets/action";
 import { Suspense } from "react";
 import { Spinner } from "@heroui/react";
 import VendorManageTickets from "./VendorManageTickets";
@@ -16,7 +16,7 @@ const VendorTickets = () => {
         if (!session?.user?.email) return;
 
         const fetchTickets = async () => {
-            const tickets = await myTickets(session.user.email);
+            const tickets = await getMyTickets(session.user.email);
             setTickets(Array.isArray(tickets) ? tickets : []);
         };
         fetchTickets();

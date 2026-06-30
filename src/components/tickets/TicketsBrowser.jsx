@@ -1,5 +1,5 @@
 import { Suspense } from "react";
-import { fetchTickets } from "@/lib/api/tickets/data";
+import { fetchTickets } from "@/lib/api/tickets/publicData";
 import TicketCard from "./TicketCard";
 import TicketsPagination from "./TicketsPagination";
 

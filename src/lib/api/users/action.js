@@ -2,7 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { getUser } from "@/lib/api/session";
-import { authenticatedMutation } from "../server";
+import { authenticatedMutation } from "../authenticatedServer";
 
 export const createUser = async (userData) => {
   const resData = await authenticatedMutation(userData, "/api/users", "POST");
