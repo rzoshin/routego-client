@@ -1,8 +1,17 @@
 import { serverFetch } from "../server";
 
+function normalizeTicketList(result) {
+  if (!Array.isArray(result)) return [];
+  return result.map((ticket) => ({
+    ...ticket,
+    _id: String(ticket._id),
+    isAdvertised: Boolean(ticket.isAdvertised),
+  }));
+}
+
 export const myTickets = async (email) => {
   const result = await serverFetch(`/api/tickets/vendor/${email}`);
-  return result;
+  return normalizeTicketList(result);
 };
 
 export const fetchTickets = async (query) => {
@@ -12,12 +21,12 @@ export const fetchTickets = async (query) => {
 
 export const fetchFeaturedTickets = async () => {
   const result = await serverFetch(`/api/tickets/featured`);
-  return result;
+  return normalizeTicketList(result);
 };
 
 export const fetchLatestTickets = async () => {
   const result = await serverFetch(`/api/tickets/latest`);
-  return result;
+  return normalizeTicketList(result);
 };
 
 export const fetchAdminTickets = async () => {

@@ -34,8 +34,13 @@ export const deleteMutation = async (path) => {
 
 export const serverFetch = async (path) => {
   try {
-    const res = await fetch(`${baseURL}${path}`, { cache: "no-store" });
-    return parseResponse(res);
+    const res = await fetch(`${baseURL}${path}`, {
+      cache: "no-store",
+      next: { revalidate: 0 },
+    });
+    const data = await parseResponse(res);
+    if (!res.ok) return null;
+    return data;
   } catch {
     return null;
   }

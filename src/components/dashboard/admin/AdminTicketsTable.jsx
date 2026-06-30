@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import {
@@ -26,13 +26,27 @@ const statusStyles = {
 export default function AdminTicketsTable({ tickets = [] }) {
   const router = useRouter();
   const [loadingId, setLoadingId] = useState(null);
+  const [ticketList, setTicketList] = useState(tickets);
+
+  useEffect(() => {
+    setTicketList(tickets);
+  }, [tickets]);
 
   const handleVerification = async (id, status) => {
+    const ticketId = String(id);
+
     try {
-      setLoadingId(id);
-      const result = await updateTicketVerification(id, status);
+      setLoadingId(ticketId);
+      const result = await updateTicketVerification(ticketId, status);
 
       if (result?.success) {
+        setTicketList((prev) =>
+          prev.map((ticket) =>
+            String(ticket._id) === ticketId
+              ? { ...ticket, verificationStatus: status }
+              : ticket
+          )
+        );
         toast.success(`Ticket ${status}`);
         router.refresh();
       } else {
@@ -71,17 +85,19 @@ export default function AdminTicketsTable({ tickets = [] }) {
               </TableColumn>
             </TableHeader>
             <TableBody
+              items={ticketList}
               emptyContent={
                 <p className="py-10 text-center font-medium">No tickets found.</p>
               }
             >
-              {tickets.map((ticket) => {
+              {(ticket) => {
+                const ticketId = String(ticket._id);
                 const status = ticket.verificationStatus || "pending";
                 const isPending = status === "pending";
 
                 return (
                   <TableRow
-                    key={ticket._id}
+                    key={ticketId}
                     className="border-b border-border/50 transition-colors last:border-b-0 hover:bg-background/5"
                   >
                     <TableCell className="px-6 py-4 align-middle">
@@ -110,32 +126,29 @@ export default function AdminTicketsTable({ tickets = [] }) {
                       </Chip>
                     </TableCell>
                     <TableCell className="px-6 py-4 align-middle">
-                      {isPending ? (
-                        <div className="flex gap-2">
-                          <Button
-                            size="sm"
-                            className="border border-green-500/30 bg-green-500/20 text-green-400"
-                            isLoading={loadingId === ticket._id}
-                            onPress={() => handleVerification(ticket._id, "approved")}
-                          >
-                            Approve
-                          </Button>
-                          <Button
-                            size="sm"
-                            className="border border-red-500/30 bg-red-500/20 text-red-400"
-                            isDisabled={loadingId === ticket._id}
-                            onPress={() => handleVerification(ticket._id, "rejected")}
-                          >
-                            Reject
-                          </Button>
-                        </div>
-                      ) : (
-                        <span className="text-xs text-muted-foreground">—</span>
-                      )}
+                      <div className="flex min-h-8 items-center gap-2">
+                        <Button
+                          size="sm"
+                          className="border border-green-500/30 bg-green-500/20 text-green-400"
+                          isLoading={loadingId === ticketId}
+                          isDisabled={!isPending || loadingId === ticketId}
+                          onPress={() => handleVerification(ticketId, "approved")}
+                        >
+                          Approve
+                        </Button>
+                        <Button
+                          size="sm"
+                          className="border border-red-500/30 bg-red-500/20 text-red-400"
+                          isDisabled={!isPending || loadingId === ticketId}
+                          onPress={() => handleVerification(ticketId, "rejected")}
+                        >
+                          Reject
+                        </Button>
+                      </div>
                     </TableCell>
                   </TableRow>
                 );
-              })}
+              }}
             </TableBody>
           </TableContent>
         </Table>

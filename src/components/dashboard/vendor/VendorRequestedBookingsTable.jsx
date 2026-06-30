@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import {
@@ -27,13 +27,27 @@ const statusStyles = {
 export default function VendorRequestedBookingsTable({ bookings = [] }) {
   const router = useRouter();
   const [loadingId, setLoadingId] = useState(null);
+  const [bookingList, setBookingList] = useState(bookings);
+
+  useEffect(() => {
+    setBookingList(Array.isArray(bookings) ? bookings : []);
+  }, [bookings]);
 
   const handleStatusUpdate = async (bookingId, status) => {
+    const id = String(bookingId);
+
     try {
-      setLoadingId(bookingId);
-      const result = await updateBookingStatus(bookingId, status);
+      setLoadingId(id);
+      const result = await updateBookingStatus(id, status);
 
       if (result?.success) {
+        setBookingList((prev) =>
+          prev.map((booking) =>
+            String(booking._id) === id
+              ? { ...booking, bookingStatus: status }
+              : booking
+          )
+        );
         toast.success(`Booking ${status}`);
         router.refresh();
       } else {
@@ -72,19 +86,21 @@ export default function VendorRequestedBookingsTable({ bookings = [] }) {
               </TableColumn>
             </TableHeader>
             <TableBody
+              items={bookingList}
               emptyContent={
                 <p className="py-10 text-center font-medium">
                   No booking requests yet.
                 </p>
               }
             >
-              {bookings.map((booking) => {
+              {(booking) => {
+                const bookingId = String(booking._id);
                 const status = booking.bookingStatus || "pending";
                 const isPending = status === "pending";
 
                 return (
                   <TableRow
-                    key={booking._id}
+                    key={bookingId}
                     className="border-b border-border/5 hover:bg-background/5 transition-colors last:border-b-0"
                   >
                     <TableCell className="py-4 px-6 align-middle">
@@ -92,9 +108,7 @@ export default function VendorRequestedBookingsTable({ bookings = [] }) {
                         <p className="font-semibold">
                           {booking.userName || "User"}
                         </p>
-                        <p className="text-xs">
-                          {booking.userEmail}
-                        </p>
+                        <p className="text-xs">{booking.userEmail}</p>
                       </div>
                     </TableCell>
                     <TableCell className="py-4 px-6 align-middle font-medium">
@@ -115,36 +129,33 @@ export default function VendorRequestedBookingsTable({ bookings = [] }) {
                       </Chip>
                     </TableCell>
                     <TableCell className="py-4 px-6 align-middle">
-                      {isPending ? (
-                        <div className="flex gap-2">
-                          <Button
-                            size="sm"
-                            className="bg-green-500/20 text-green-400 border border-green-500/30"
-                            isLoading={loadingId === booking._id}
-                            onPress={() =>
-                              handleStatusUpdate(booking._id, "accepted")
-                            }
-                          >
-                            Accept
-                          </Button>
-                          <Button
-                            size="sm"
-                            className="bg-red-500/20 text-red-400 border border-red-500/30"
-                            isDisabled={loadingId === booking._id}
-                            onPress={() =>
-                              handleStatusUpdate(booking._id, "rejected")
-                            }
-                          >
-                            Reject
-                          </Button>
-                        </div>
-                      ) : (
-                        <span className="text-xs">—</span>
-                      )}
+                      <div className="flex min-h-8 items-center gap-2">
+                        <Button
+                          size="sm"
+                          className="bg-green-500/20 text-green-400 border border-green-500/30"
+                          isLoading={loadingId === bookingId}
+                          isDisabled={!isPending || loadingId === bookingId}
+                          onPress={() =>
+                            handleStatusUpdate(bookingId, "accepted")
+                          }
+                        >
+                          Accept
+                        </Button>
+                        <Button
+                          size="sm"
+                          className="bg-red-500/20 text-red-400 border border-red-500/30"
+                          isDisabled={!isPending || loadingId === bookingId}
+                          onPress={() =>
+                            handleStatusUpdate(bookingId, "rejected")
+                          }
+                        >
+                          Reject
+                        </Button>
+                      </div>
                     </TableCell>
                   </TableRow>
                 );
-              })}
+              }}
             </TableBody>
           </TableContent>
         </Table>

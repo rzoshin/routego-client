@@ -41,6 +41,7 @@ export const updateTicketAdvertise = async (id, isAdvertised) => {
     "PATCH"
   );
   revalidatePath("/dashboard/admin/advertise-tickets");
-  revalidatePath("/");
+  revalidatePath("/", "page");
+  revalidatePath("/", "layout");
   return resData;
 };

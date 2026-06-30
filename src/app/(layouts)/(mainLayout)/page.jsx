@@ -6,12 +6,26 @@ import PopularRoutes from "@/components/homepage/PopularRoutes";
 import Testimonials from "@/components/homepage/Testimonials";
 import CTA from "@/components/homepage/Cta";
 import { Toaster } from "react-hot-toast";
+import {
+  fetchFeaturedTickets,
+  fetchLatestTickets,
+} from "@/lib/api/tickets/data";
+
+export const dynamic = "force-dynamic";
 
 export default async function HomePage() {
+  const [advertisedTickets, latestTickets] = await Promise.all([
+    fetchFeaturedTickets(),
+    fetchLatestTickets(),
+  ]);
+
     return (
         <main>
             <Hero />
-            <FeaturedTickets />
+            <FeaturedTickets
+                advertisedTickets={advertisedTickets}
+                latestTickets={latestTickets}
+            />
             <PopularRoutes />
             <WhyChooseUs />
             <Stats />

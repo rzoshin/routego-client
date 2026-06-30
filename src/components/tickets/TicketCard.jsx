@@ -24,7 +24,7 @@ const TicketCard = ({ ticket, buttonText = "View Details" }) => {
       {/* Image */}
       <div className="relative h-44 w-full overflow-hidden">
         <Image
-          src={ticket.image}
+          src={ticket.image || "/bus-ticket.png"}
           alt={ticket.title}
           fill
           unoptimized
